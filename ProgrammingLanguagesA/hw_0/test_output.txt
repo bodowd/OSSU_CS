@@ -1,0 +1,6 @@
+Standard ML of New Jersey (64-bit) v110.99.1 [built: Mon Apr 12 18:45:14 2021]
+[opening _2fbdc6f053a05cb18a910cba669c2687_hw0provided.sml]
+val f = fn : int * int -> int
+val double = fn : int -> int
+val triple = fn : int -> int
+- 
