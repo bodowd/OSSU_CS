@@ -1,0 +1,12 @@
+note over browser:
+user submits new note
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: HTTP Status code 201
+
+note over browser:
+browser does not ask for a redirect
+and stays on the same page,
+and it sends no further HTTP requests.
+end note
