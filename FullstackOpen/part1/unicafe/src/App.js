@@ -5,7 +5,12 @@ const ShowText = (props) => {
 };
 
 const ShowCounts = (props) => {
-  return <p>{props.text} {props.count}</p>
+  return (
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.count}</td>
+    </tr>
+  )
 }
 
 const Statistics = (props) => {
@@ -15,28 +20,24 @@ const Statistics = (props) => {
   const sum = props.good + props.neutral + props.bad
   const avg = (gd + nt + bd) / sum
 
-  if (sum == 0) {
+  if (sum === 0) {
     return (
       <p>No feedback given</p>
     )
   }
   return (
-    <p>
-      <ShowCounts text="good" count={props.good} />
-      <ShowCounts text="neutral" count={props.neutral} />
-      <ShowCounts text="bad" count={props.bad} />
-      <ShowCounts text="average" count={avg} />
-      <ShowCounts text="positive" count={`${(props.good / sum) * 100}%`} />
-    </p>
+    <table>
+      <tbody>
+        <ShowCounts text="good" count={props.good} />
+        <ShowCounts text="neutral" count={props.neutral} />
+        <ShowCounts text="bad" count={props.bad} />
+        <ShowCounts text="average" count={avg} />
+        <ShowCounts text="positive" count={`${(props.good / sum) * 100}%`} />
+      </tbody>
+    </table>
   )
 }
 
-const CalcPositive = (props) => {
-  const all = props.good + props.bad + props.neutral
-  return (
-    (props.good / all) * 100
-  )
-}
 
 
 const App = () => {
