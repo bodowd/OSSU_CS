@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 
-
-const Button = ({handleClick, text}) => {
-  return (<button onClick={handleClick}>{text}</button>)
-}
+const Button = ({ handleClick, text }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
 
 const App = () => {
   const anecdotes = [
@@ -17,17 +16,29 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0})
 
   const nextAnec = () => {
     // console.log('Selected is: ', selected)
-    setSelected(Math.floor(Math.random() * anecdotes.length))
-  }
+    setSelected(Math.floor(Math.random() * anecdotes.length));
+  };
+
+  const addVote = () => {
+    //  if votes[selected] is undefined, set it to zero
+    // const curr = votes[selected] || 0
+    const curr = votes[selected]
+    setVotes({...votes, [selected]: curr + 1})
+  };
 
   return (
-    <div>{anecdotes[selected]}
-      <p>
-        <Button handleClick={nextAnec} text='next anecdote' />
-      </p>
+    <div>
+      {anecdotes[selected]}
+      {/* if votes doesn't have the key yet, just display 0. Otherwise votes[selected] will return undefined */}
+      <div>has {votes[selected] || 0 } votes</div>
+      <div>
+        <Button handleClick={addVote} text="vote" />
+        <Button handleClick={nextAnec} text="next anecdote" />
+      </div>
     </div>
   );
 };
