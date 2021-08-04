@@ -17,6 +17,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState({0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0})
+  const [mostVotes, setMostVotes] = useState(0)
 
   const nextAnec = () => {
     // console.log('Selected is: ', selected)
@@ -28,17 +29,26 @@ const App = () => {
     // const curr = votes[selected] || 0
     const curr = votes[selected]
     setVotes({...votes, [selected]: curr + 1})
+
+    // find highest value in the object
+    const highestCount = Math.max(...Object.values(votes))
+    // kind the key corresponding to the highest object otherwise return null. Returns an array [key, value]
+    const maxKey = Object.entries(votes).find(([k,v]) => v === highestCount ? k : null)
+    setMostVotes(maxKey[0])
   };
+
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
-      {/* if votes doesn't have the key yet, just display 0. Otherwise votes[selected] will return undefined */}
-      <div>has {votes[selected] || 0 } votes</div>
+      <div>has {votes[selected]} votes</div>
       <div>
         <Button handleClick={addVote} text="vote" />
         <Button handleClick={nextAnec} text="next anecdote" />
       </div>
+      <h1>Anecdote with most votes</h1>
+      <div>{anecdotes[mostVotes]}</div>
     </div>
   );
 };
