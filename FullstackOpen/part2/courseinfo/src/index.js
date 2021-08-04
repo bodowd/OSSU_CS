@@ -7,7 +7,7 @@ const Header = ({ course }) => {
 
 const Total = ({ course }) => {
   const sum = course.parts.reduce((acc, v) => acc = acc + v.exercises, 0)
-  return <p>Number of exercises {sum}</p>;
+  return <p><b>total of {sum} exercises</b></p>;
 };
 
 const Part = (props) => {
@@ -58,8 +58,8 @@ const App = () => {
       },
       // test that it works on more data
       {
-        name: "State of a component test-second part",
-        exercises: 14,
+        name: "Redux",
+        exercises: 11,
         id: 4,
       },
     ],
