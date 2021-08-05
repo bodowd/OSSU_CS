@@ -15,9 +15,15 @@ const App = () => {
     const nameObject = {
       name: newName
     }
-    setPersons(persons.concat(nameObject))
-    setNewName('')
-    console.log(persons);
+    // check if name is already in the phonebook
+    if (persons.find(p => p.name === newName)) {
+      window.alert(`${newName} is already added to phonebook`)
+      return (null)
+    } else {
+      setPersons(persons.concat(nameObject))
+      setNewName('')
+      console.log(persons);
+    }
   }
 
   const handleNameChange = (event) => {
@@ -38,7 +44,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
         <div>
-          {persons.map(person => <Person person={person}/> )}
+          {persons.map(person => <Person key={person.name} person={person}/> )}
         </div>
     </div>
   );
