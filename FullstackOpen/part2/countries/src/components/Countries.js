@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import axios from 'axios'
+import Weather from './Weather'
 
-const CountryWithInfo = ({ country }) => {
+const CountryWithInfo = ({ country, weather }) => {
   return (
     <div>
       <h1>{country.name}</h1>
@@ -20,13 +22,18 @@ const CountryWithInfo = ({ country }) => {
         width="250"
         height="200"
       ></img>
+      <h2>Weather in {country.capital}</h2>
+      <Weather country={country} weather={weather}/>
     </div>
   );
 };
 
+
 const Countries = (props) => {
   const [show, setShow] = useState("");
-  console.log(show);
+  const [weather, setWeather] = useState(null)
+
+  const api_key = process.env.REACT_APP_API_KEY
 
   const toggle = (country) => {
       // if the country name is already set to show, then when this button is hit again, it will setShow to '' in order to hide
@@ -35,6 +42,11 @@ const Countries = (props) => {
       }
       else {
           setShow(country.name)
+        axios
+            .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`)
+            .then(response => {
+                setWeather(response.data.current)
+            })
       }
   }
 
@@ -50,7 +62,7 @@ const Countries = (props) => {
     if (type === "detailed") {
       return (
         <div>
-          <CountryWithInfo country={country} />
+          <CountryWithInfo country={country} weather={weather} />
           <ToggleButton country={country} />
         </div>)
     }
@@ -66,7 +78,7 @@ const Countries = (props) => {
     return (
       <div>
         {props.toShow.map((c) => (
-          <Country key={c.name} type="detailed" country={c} />
+          <Country key={c.name} type="detailed" country={c} weather={null} />
         ))}
       </div>
     );
@@ -79,6 +91,7 @@ const Countries = (props) => {
             key={c.name}
             type={c.name === show ? "detailed" : ""}
             country={c}
+            weather={null}
           />
         ))}
       </div>
