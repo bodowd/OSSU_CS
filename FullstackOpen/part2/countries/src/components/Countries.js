@@ -28,14 +28,36 @@ const Countries = (props) => {
   const [show, setShow] = useState("");
   console.log(show);
 
+  const toggle = (country) => {
+      // if the country name is already set to show, then when this button is hit again, it will setShow to '' in order to hide
+      if (show === country.name) {
+          setShow('')
+      }
+      else {
+          setShow(country.name)
+      }
+  }
+
+  const ToggleButton = ({country}) => {
+      return (
+          <button onClick={() => toggle(country)}>
+              {country.name === show ? 'hide' : 'show'}
+          </button>
+      )
+  }
+
   const Country = ({ country, type }) => {
     if (type === "detailed") {
-      return <CountryWithInfo country={country} />;
+      return (
+        <div>
+          <CountryWithInfo country={country} />
+          <ToggleButton country={country} />
+        </div>)
     }
     return (
       <div>
         {country.name}
-        <button onClick={() => setShow(country.name)}>show</button>
+        <ToggleButton country={country} />
       </div>
     );
   };
@@ -65,26 +87,6 @@ const Countries = (props) => {
     return <> too many matches, specify another filter </>;
   }
 
-  //   if (props.toShow.length > 10) {
-  //     return <div>Too many matches, specify another filter</div>;
-  //   } else if (props.toShow.length > 1 && props.toShow.length <= 10) {
-  //     return (
-  //       <div>
-  //         {props.toShow.map((c) => (
-  //           <Country key={c.name} type="" country={c} />
-  //         ))}
-  //       </div>
-  //     );
-  //   } else {
-  //       console.log(props.toShow);
-  //     return (
-  //       <div>
-  //         {props.toShow.map((c) => (
-  //           <Country key={c.name} type="detailed" country={c} />
-  //         ))}
-  //       </div>
-  //     );
-  //   }
 };
 
 export default Countries;
