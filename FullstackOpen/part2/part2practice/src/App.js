@@ -40,9 +40,12 @@ const App = () => {
     // setNewNote('')
     // console.log(notes)
     axios
+    // adds note to the db
       .post('http://localhost:3001/notes', noteObject)
       .then(response => {
-        console.log(response);
+        // adds to the list of notes in the application's state
+        setNotes(notes.concat(response.data))
+        setNewNote('')
       })
   }
 
