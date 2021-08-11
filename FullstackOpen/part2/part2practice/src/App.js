@@ -14,8 +14,8 @@ const App = () => {
   const hook = () => {
     noteService
       .getAll()
-      .then(response => {
-        setNotes(response.data)
+      .then(initialNotes => {
+        setNotes(initialNotes)
       })
   }
   // // the first parameter is a function, the hook itself
@@ -44,9 +44,9 @@ const App = () => {
     // add note to db and to the application state to update the note list
     noteService
       .create(noteObject)
-      .then(response => {
+      .then(returnedNote => {
         // after the server responds that it has added the new note, update the note state to display it with the response data
-        setNotes(notes.concat(response.data))
+        setNotes(notes.concat(returnedNote))
         setNewNote('')
       })
   }
@@ -64,10 +64,15 @@ const App = () => {
     // except for the old note which is replaced by the updated version of it _returned_ by the server
     noteService
       .update(id, changedNote)
-      .then(response => {
+      .then(returnedNote => {
         // contain all the items from the original notes array except where id matches the note id. In that case return the response that occurs after adding the new note to the server
-        console.log(response);
-        setNotes(notes.map(note => note.id !== id ? note : response.data))
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(error => {
+        alert(
+          `the note '${note.content}' was already deleted from server`
+        )
+        setNotes(notes.filter(n => n.id !== id))
       })
   }
 
