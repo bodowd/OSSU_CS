@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
 import Note from './components/Note'
+// we don't define `noteService` explicity. we just name what is exported from notes service as noteService
+import noteService from './services/notes'
 
 
 const App = () => {
@@ -10,16 +12,14 @@ const App = () => {
 
 
   const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/notes')
+    noteService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled');
         setNotes(response.data)
       })
   }
-  // the first parameter is a function, the hook itself
-  // the second parameter specifies how often the effect is run. If the second parameter is an empty array, the effect is only run along with the first render of the component
+  // // the first parameter is a function, the hook itself
+  // // the second parameter specifies how often the effect is run. If the second parameter is an empty array, the effect is only run along with the first render of the component
   useEffect(hook, [])
 
   console.log('render', notes.length, 'notes');
@@ -42,11 +42,10 @@ const App = () => {
     // console.log(notes)
 
     // add note to db and to the application state to update the note list
-    axios
-      // adds note to the db
-      .post('http://localhost:3001/notes', noteObject)
+    noteService
+      .create(noteObject)
       .then(response => {
-        // adds to the list of notes in the application's state
+        // after the server responds that it has added the new note, update the note state to display it with the response data
         setNotes(notes.concat(response.data))
         setNewNote('')
       })
@@ -59,15 +58,15 @@ const App = () => {
   }
 
   const toggleImportanceOf = (id) => {
-    const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
     // callback function sets the component's notes state to a new array that contains all the items from the previous notes array
     // except for the old note which is replaced by the updated version of it _returned_ by the server
-    axios
-      .put(url, changedNote)
+    noteService
+      .update(id, changedNote)
       .then(response => {
         // contain all the items from the original notes array except where id matches the note id. In that case return the response that occurs after adding the new note to the server
+        console.log(response);
         setNotes(notes.map(note => note.id !== id ? note : response.data))
       })
   }
