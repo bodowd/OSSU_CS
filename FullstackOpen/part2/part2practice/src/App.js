@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios'
 import Note from './components/Note'
 
@@ -7,6 +7,7 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
+
 
   const hook = () => {
     console.log('effect')
@@ -39,8 +40,10 @@ const App = () => {
     // // reset the value of newNote state
     // setNewNote('')
     // console.log(notes)
+
+    // add note to db and to the application state to update the note list
     axios
-    // adds note to the db
+      // adds note to the db
       .post('http://localhost:3001/notes', noteObject)
       .then(response => {
         // adds to the list of notes in the application's state
@@ -55,6 +58,20 @@ const App = () => {
     setNewNote(event.target.value)
   }
 
+  const toggleImportanceOf = (id) => {
+    const url = `http://localhost:3001/notes/${id}`
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+    // callback function sets the component's notes state to a new array that contains all the items from the previous notes array
+    // except for the old note which is replaced by the updated version of it _returned_ by the server
+    axios
+      .put(url, changedNote)
+      .then(response => {
+        // contain all the items from the original notes array except where id matches the note id. In that case return the response that occurs after adding the new note to the server
+        setNotes(notes.map(note => note.id !== id ? note : response.data))
+      })
+  }
+
   return (
     <div>
       <h1>Notes</h1>
@@ -66,7 +83,7 @@ const App = () => {
       <ul>
         {/* notes is an array of objects */}
         {notesToShow.map(note =>
-          <Note key={note.id} note={note} />)}
+          <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />)}
       </ul>
       <form onSubmit={addNote}>
         <input value={newNote} onChange={handleNoteChange} />
