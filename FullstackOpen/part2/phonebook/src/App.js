@@ -30,9 +30,12 @@ const App = () => {
       number: newNumber
     }
     // check if name is already in the phonebook
-    if (persons.find(p => p.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
-      return (null)
+    const existingEntry = persons.find(p => p.name === newName)
+    if (existingEntry) {
+      const result = window.confirm(`${newName} is already added to phonebook. Replace the number?`)
+      if (result) {
+        personsService.update(nameObject, existingEntry.id)
+      }
     } else {
       personsService
         .create(nameObject)
@@ -42,6 +45,20 @@ const App = () => {
           setNewNumber('')
         })
     }
+  }
+
+  const deleteName = (id) => {
+    const person = persons.find(p => p.id === id)
+    const ok = window.confirm(`Delete ${person.name}?`)
+    if (ok) {
+      personsService
+        .remove(person.id)
+        .then(returnedPeople => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+
+    }
+
   }
 
   const handleNameChange = (event) => {
@@ -57,7 +74,7 @@ const App = () => {
     setNewSearch(event.target.value)
   }
 
-  const personToShow = newSearch === "" ? persons : persons.filter(p => p.name.toLowerCase().includes(newSearch.toLowerCase()))
+  // const personToShow = newSearch === "" ? persons : persons.filter(p => p.name.toLowerCase().includes(newSearch.toLowerCase()))
 
   return (
     <div>
@@ -67,7 +84,7 @@ const App = () => {
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange}
         newNumber={newNumber} handleNewNumber={handleNewNumber} />
       <h3>Numbers</h3>
-      <Persons personToShow={personToShow} />
+      <Persons persons={persons} search={newSearch} deleteEntry={deleteName} />
     </div>
   );
 };

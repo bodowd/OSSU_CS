@@ -1,16 +1,17 @@
 import React from 'react'
+import persons from '../services/persons'
 
-const Person = ({person}) => {
-  return (
-    <div>{person.name} {person.number} </div>
-  )
-}
 
-const Persons = (props) => {
+const Persons = ({persons, search, deleteEntry}) => {
   return (
-        <div>
-          {props.personToShow.map(person => <Person key={person.name} person={person}/> )}
-        </div>
+    <div>
+      {persons
+        .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+        .map(p =>
+          <div key={p.id}>
+            {p.name} {p.number} <button onClick={() => deleteEntry(p.id)}>delete</button>
+          </div>)}
+    </div>
   )
 }
 
