@@ -34,7 +34,15 @@ const App = () => {
     if (existingEntry) {
       const result = window.confirm(`${newName} is already added to phonebook. Replace the number?`)
       if (result) {
-        personsService.update(nameObject, existingEntry.id)
+        personsService
+          .update(nameObject, existingEntry.id)
+          // returned data from update is just the one person, so we map over the persons list and if the person id matches our current one, we replace it with the new
+          // returnedPerson object otherwise we just keep the current element (which is unchanged)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id === returnedPerson.id ? returnedPerson : p))
+            setNewName('')
+            setNewNumber('')
+          })
       }
     } else {
       personsService
