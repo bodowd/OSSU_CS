@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios'
 import Note from './components/Note'
 // we don't define `noteService` explicity. we just name what is exported from notes service as noteService
 import noteService from './services/notes'
