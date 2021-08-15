@@ -14,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newSearch, setNewSearch] = useState("")
   const [newNotif, setNewNotif] = useState(null)
+  const [notifClass, setNotifClass] = useState("added")
 
   const hook = () => {
     personsService
@@ -47,6 +48,10 @@ const App = () => {
             setNewNumber('')
             setNewNotif(`Updated ${returnedPerson.name}`)
           })
+          .catch(error => {
+            setNewNotif(`Information of ${nameObject.name} has already been removed from server`)
+            setNotifClass("error")
+          })
       }
     } else {
       personsService
@@ -57,6 +62,11 @@ const App = () => {
           setNewNumber('')
           setNewNotif(`Added ${nameObject.name} to the phonebook`)
         })
+        .catch(error => {
+          setNewNotif(`Information of ${nameObject.name} has already been removed from server`)
+          setNotifClass("error")
+        })
+
     }
   }
 
@@ -69,7 +79,10 @@ const App = () => {
         .then(returnedPeople => {
           setPersons(persons.filter(p => p.id !== id))
         })
-
+        .catch(error => {
+          setNewNotif(`Information of ${person.name} has already been removed from server`)
+          setNotifClass("error")
+        })
     }
 
   }
@@ -92,7 +105,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={newNotif} divclass={"added"} />
+      <Notification message={newNotif} divclass={notifClass} />
       <Filter search={newSearch} onSearch={handleSearchChange} />
       <h3>add a new</h3>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange}
