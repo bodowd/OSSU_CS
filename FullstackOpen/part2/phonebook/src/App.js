@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Persons from './components/Persons'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import PersonForm from "./components/PersonForm";
 import personsService from "./services/persons"
+import './index.css'
 
 
 
@@ -11,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [newName, setNewName] = useState("");
   const [newSearch, setNewSearch] = useState("")
+  const [newNotif, setNewNotif] = useState(null)
 
   const hook = () => {
     personsService
@@ -42,6 +45,7 @@ const App = () => {
             setPersons(persons.map(p => p.id === returnedPerson.id ? returnedPerson : p))
             setNewName('')
             setNewNumber('')
+            setNewNotif(`Updated ${returnedPerson.name}`)
           })
       }
     } else {
@@ -51,6 +55,7 @@ const App = () => {
           setPersons(persons.concat(returnedPeople))
           setNewName('')
           setNewNumber('')
+          setNewNotif(`Added ${nameObject.name} to the phonebook`)
         })
     }
   }
@@ -87,6 +92,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={newNotif} divclass={"added"} />
       <Filter search={newSearch} onSearch={handleSearchChange} />
       <h3>add a new</h3>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange}
