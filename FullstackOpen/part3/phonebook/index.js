@@ -2,6 +2,8 @@ const { response } = require('express')
 const express = require('express')
 const app = express()
 
+// THIS IS SUPER IMPORTANT. initial handler for dealing with HTTP POST requests
+app.use(express.json())
 
 let persons = [
     { 
@@ -32,6 +34,26 @@ app.get('/', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)
+})
+
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  
+  const person = {
+    id: Math.floor(Math.random() * 1000),
+    name: body.name,
+    number: body.number
+  }
+  
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'name missing'
+    })
+  }
+
+  persons = persons.concat(person)
+  response.json(person)
 })
 
 app.get('/info', (request, response) => {
