@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let notes = [{
         id: 1,
         content: "HTML is easy",
@@ -27,6 +29,37 @@ app.get('/', (request, response) => {
 
 app.get('/api/notes', (request, response) => {
     response.json(notes)
+})
+
+const generateId = () => {
+    // find the largest id number and assign it the maxId variable
+    const maxId = notes.length > 0
+        // map returns an array that can't be given as a parameter to Math.max
+        // convert the array into individual numbers using the three dot spread syntax "..."
+        // Math.max takes arguments like this: Math.max(1,2,3,4,5) not an array
+        ? Math.max(...notes.map(n => n.id))
+        : 0
+    return maxId + 1
+}
+
+app.post('/api/notes', (request, response) => {
+    const body = request.body
+
+    if (!body.content) {
+        // if received data is missing a value for the content property, respond with 400
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    }
+    
+    const note = {
+        content: body.content,
+        important: body.important || false,
+        date: new Date(),
+        id: generateId()
+    }
+    notes = notes.concat(note)
+    response.json(note)
 })
 
 // define paramters for routes in ExpressJS by using the colon syntax
