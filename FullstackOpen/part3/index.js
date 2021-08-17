@@ -29,7 +29,29 @@ app.get('/api/notes', (request, response) => {
     response.json(notes)
 })
 
-const PORT = 3001
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// define paramters for routes in ExpressJS by using the colon syntax
+app.get('/api/notes/:id', (request, response) => {
+    // the id parameter in the route of a request can be accessed through the request object
+    // id variable is a string whereas the id of notes are integers. need to change to int to do comparison
+    const id = Number(request.params.id)
+    const note = notes.find(note => note.id === id)
+
+    // if the note doesn't exist (returning undefined) give a 404
+    if (note) {
+        response.json(note)
+    } else {
+        response.status(404).send()
+    }
+    response.json(note)
 })
+
+app.delete('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    notes = notes.filter(note => note.id !== id)
+    // if deleting the resource is successful, meaning that the note exists and it is removed, respond with 204 no content status code
+    response.status(204).end()
+})
+
+const PORT = 3001
+// need to write it with localhost specified to make VSCode Rest Client extension work
+app.listen(PORT, 'localhost')
