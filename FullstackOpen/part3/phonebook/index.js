@@ -55,5 +55,13 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  // filter out the id that matches the request (keep the ones that don't match)
+  persons = persons.filter(p => p.id !== id)
+  // if deleting the resource is successful, respond with no content 204
+  response.status(204).end()
+})
+
 const PORT = 3001
 app.listen(PORT, 'localhost')
