@@ -3,6 +3,18 @@ const app = express()
 
 app.use(express.json())
 
+// Middleware is a function that receives three parameters
+// the next function yields control to the next middleware
+const requestLogger = (request, repsponse, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:', request.path)
+    console.log('Body:', request.body)
+    console.log('---')
+    next()
+}
+
+app.use(requestLogger)
+
 let notes = [{
         id: 1,
         content: "HTML is easy",
@@ -84,6 +96,11 @@ app.delete('/api/notes/:id', (request, response) => {
     // if deleting the resource is successful, meaning that the note exists and it is removed, respond with 204 no content status code
     response.status(204).end()
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({error: 'unknown endpoint'})
+}
+app.use(unknownEndpoint)
 
 const PORT = 3001
 // need to write it with localhost specified to make VSCode Rest Client extension work
