@@ -110,6 +110,9 @@ const unknownEndpoint = (request, response) => {
 }
 app.use(unknownEndpoint)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 // need to write it with localhost specified to make VSCode Rest Client extension work
-app.listen(PORT, 'localhost')
+// app.listen(PORT, 'localhost')
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
