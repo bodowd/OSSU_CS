@@ -4,6 +4,7 @@ const cors = require('cors')
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
 
 // Middleware is a function that receives three parameters
 // the next function yields control to the next middleware
