@@ -40,6 +40,12 @@ let notes = [{
         content: "New note",
         date: "2021-05-01",
         important: true
+    },
+    {
+        id:5,
+        content: "Another one",
+        date: "2021-02-20",
+        important: false
     }
 ]
 
