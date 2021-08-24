@@ -1,8 +1,9 @@
-const { response } = require('express')
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Persons = require('./models/person')
 
 app.use(cors())
 // THIS IS SUPER IMPORTANT. initial handler for dealing with HTTP POST requests
@@ -12,35 +13,39 @@ app.use(express.static('build'))
 morgan.token('body', function (req, res) {return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+// let persons = [
+//     { 
+//       "id": 1,
+//       "name": "Arto Hellas", 
+//       "number": "040-123456"
+//     },
+//     { 
+//       "id": 2,
+//       "name": "Ada Lovelace", 
+//       "number": "39-44-5323523"
+//     },
+//     { 
+//       "id": 3,
+//       "name": "Dan Abramov", 
+//       "number": "12-43-234345"
+//     },
+//     { 
+//       "id": 4,
+//       "name": "Mary Poppendieck", 
+//       "number": "39-23-6423122"
+//     }
+// ]
 
 app.get('/', (request, response) => {
     response.send('<h1>Hi</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+  Persons.find({}).then(p => {
+    response.json(p)
+  }).catch(error => {
+    console.log('ERROR: ', error.message)
+  })
 })
 
 
