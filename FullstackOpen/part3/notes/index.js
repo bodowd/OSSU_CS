@@ -1,6 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
+// const mongoose = require('mongoose')
+const Note = require('./models/note')
+
+
+
+
 
 app.use(cors())
 app.use(express.json())
@@ -18,44 +25,72 @@ const requestLogger = (request, repsponse, next) => {
 
 app.use(requestLogger)
 
-let notes = [{
-        id: 1,
-        content: "HTML is easy",
-        date: "2019-05-30T17:30:31.098Z",
-        important: true
-    },
-    {
-        id: 2,
-        content: "Browser can execute only Javascript",
-        date: "2019-05-30T18:39:34.091Z",
-        important: false
-    },
-    {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        date: "2019-05-30T19:20:14.298Z",
-        important: true
-    },
-    {
-        id:4,
-        content: "New note",
-        date: "2021-05-01",
-        important: true
-    },
-    {
-        id:5,
-        content: "Another one",
-        date: "2021-02-20",
-        important: false
-    }
-]
+// const url = `mongodb+srv://fullstack:${process.env.NOTES_DB_PASS}@cluster0.uuykr.mongodb.net/note-app?retryWrites=true&w=majority`
+
+// mongoose.connect(url, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useFindAndModify: false,
+//     useCreateIndex: true
+// })
+
+// const noteSchema = new mongoose.Schema({
+//     content: String,
+//     date: Date,
+//     important: Boolean
+// })
+
+// noteSchema.set('toJSON', {
+//     transform: (document, returnedObject) => {
+//         // the _id property looks like a string, but is in fact an object. Transform it to a string to be safe once we start writing tests
+//         returnedObject.id = returnedObject._id.toString()
+//         delete returnedObject._id
+//         delete returnedObject.__v
+//     }
+// })
+
+// const Note = mongoose.model('Note', noteSchema)
+
+// let notes = [{
+//         id: 1,
+//         content: "HTML is easy",
+//         date: "2019-05-30T17:30:31.098Z",
+//         important: true
+//     },
+//     {
+//         id: 2,
+//         content: "Browser can execute only Javascript",
+//         date: "2019-05-30T18:39:34.091Z",
+//         important: false
+//     },
+//     {
+//         id: 3,
+//         content: "GET and POST are the most important methods of HTTP protocol",
+//         date: "2019-05-30T19:20:14.298Z",
+//         important: true
+//     },
+//     {
+//         id:4,
+//         content: "New note",
+//         date: "2021-05-01",
+//         important: true
+//     },
+//     {
+//         id:5,
+//         content: "Another one",
+//         date: "2021-02-20",
+//         important: false
+//     }
+// ]
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello world</h1>')
 })
 
 app.get('/api/notes', (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
 })
 
 const generateId = () => {
@@ -71,7 +106,7 @@ const generateId = () => {
 
 app.post('/api/notes', (request, response) => {
     const body = request.body
-
+    
     if (!body.content) {
         // if received data is missing a value for the content property, respond with 400
         return response.status(400).json({
@@ -79,30 +114,25 @@ app.post('/api/notes', (request, response) => {
         })
     }
     
-    const note = {
+    const note = new Note({
         content: body.content,
         important: body.important || false,
         date: new Date(),
-        id: generateId()
-    }
-    notes = notes.concat(note)
-    response.json(note)
+        // id: generateId()
+    })
+
+    note.save().then(savedNote => {
+        response.json(savedNote)
+    })
 })
 
 // define paramters for routes in ExpressJS by using the colon syntax
 app.get('/api/notes/:id', (request, response) => {
     // the id parameter in the route of a request can be accessed through the request object
     // id variable is a string whereas the id of notes are integers. need to change to int to do comparison
-    const id = Number(request.params.id)
-    const note = notes.find(note => note.id === id)
-
-    // if the note doesn't exist (returning undefined) give a 404
-    if (note) {
+    Note.findById(request.params.id).then(note => {
         response.json(note)
-    } else {
-        response.status(404).send()
-    }
-    response.json(note)
+    })
 })
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -117,7 +147,7 @@ const unknownEndpoint = (request, response) => {
 }
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 // need to write it with localhost specified to make VSCode Rest Client extension work
 // app.listen(PORT, 'localhost')
 app.listen(PORT, () => {
