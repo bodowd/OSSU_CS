@@ -15,7 +15,7 @@ app.use(express.static('build'))
 
 // Middleware is a function that receives three parameters
 // the next function yields control to the next middleware
-const requestLogger = (request, repsponse, next) => {
+const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
     console.log('Path:', request.path)
     console.log('Body:', request.body)
