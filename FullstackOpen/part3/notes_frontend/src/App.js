@@ -33,7 +33,7 @@ const App = () => {
     // console.log('button clicked', event.target);
     const noteObject = {
       content: newNote,
-      date: new Date(),
+      date: new Date().toISOString(),
       important: Math.random() < 0.5
     }
     // // does not mutate the original notes array but rather creates a copy of the array with the new item added to the end
@@ -50,6 +50,9 @@ const App = () => {
         setNotes(notes.concat(returnedNote))
         setNewNote('')
       })
+      .catch(error => {
+        console.log(error.message)
+      })
   }
 
   const handleNoteChange = (event) => {
@@ -58,7 +61,7 @@ const App = () => {
     setNewNote(event.target.value)
   }
 
-  const toggleImportanceOf = (id) => {
+  const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
     // callback function sets the component's notes state to a new array that contains all the items from the previous notes array
@@ -70,8 +73,9 @@ const App = () => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
+        console.log(error.message)
         setErrorMessage(
-          `Note '${note.content}' was already removed from the server`
+          `Note '${note.content}' was already removed from the server!`
         )
         setTimeout(() => {
           setErrorMessage(null)
