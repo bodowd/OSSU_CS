@@ -13,6 +13,15 @@ app.use(express.static('build'))
 morgan.token('body', function (req, res) {return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id'})
+  }
+  next(error)
+}
+
 
 app.get('/', (request, response) => {
     response.send('<h1>Hi</h1>')
@@ -56,33 +65,55 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
+  Person.find({}).then(people => {
   response.send(
     `<div>
-      Phonebook has info for ${persons.length} people
+      Phonebook has info for ${people.length} people
     </div>
     <div>
       ${new Date()}
     </div>`)
+
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find(p => p.id === id)
+  Person.findById(request.params.id)
+    .then(person => {
+        if (person) {
+          response.json(person)
+        } else {
+          response.status(404).send()
+        }
+    })
+    .catch(error => next(error))
+})
 
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).send()
+app.put('/api/persons/:id', (request, response) => {
+  const body = request.body
+  const person = {
+    name: body.name,
+    number: body.number
   }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  // filter out the id that matches the request (keep the ones that don't match)
-  persons = persons.filter(p => p.id !== id)
-  // if deleting the resource is successful, respond with no content 204
-  response.status(204).end()
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      console.log(`Deleted ${result.name}`)
+      response.status(204).end()
+    })
+    .catch(error => console.log(error))
 })
 
-const PORT = 3001
-app.listen(PORT, 'localhost')
+// this has to be the last loaded middleware
+app.use(errorHandler)
+
+const PORT = process.env.PORT
+app.listen(PORT, () => {console.log(`Server running on port ${PORT}`)})
