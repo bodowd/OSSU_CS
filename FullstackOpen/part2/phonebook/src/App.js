@@ -63,8 +63,8 @@ const App = () => {
           setNewNotif(`Added ${nameObject.name} to the phonebook`)
         })
         .catch(error => {
-          setNewNotif(`Information of ${nameObject.name} has already been removed from server`)
-          setNotifClass("error")
+          // console.log(error.response.data.error)
+          setNewNotif(`${error.response.data} error`)
         })
 
     }
