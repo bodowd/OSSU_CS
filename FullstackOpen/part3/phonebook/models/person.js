@@ -1,4 +1,9 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
+require('dotenv').config()
+
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 const url = process.env.MONGODB_URI
 
@@ -14,8 +19,16 @@ mongoose.connect(url, {
 })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
+    name: {
+        type: String,
+        unique: true,
+        required: true,
+        minLength: 3
+    },
+    number: {
+        type: String,
+        required: true
+    }
 })
 
 personSchema.set('toJSON', {
@@ -25,6 +38,8 @@ personSchema.set('toJSON', {
         delete returnedObject.__v
     }
 })
+
+personSchema.plugin(uniqueValidator)
 
 // `Persons` has to match the db collection (or table) so it needs to be persons. Seems lower case is fine too
 // if you call it something like foo, it won't find the collection and nothing will be returned
