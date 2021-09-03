@@ -24,7 +24,7 @@ const errorHandler = (error, request, response, next) => {
 
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hi</h1>')
+  response.send('<h1>Hi</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
@@ -62,13 +62,13 @@ app.post('/api/persons', (request, response, next) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
   Person.find({}).then(people => {
-  response.send(
-    `<div>
+    response.send(
+      `<div>
       Phonebook has info for ${people.length} people
     </div>
     <div>
@@ -78,19 +78,19 @@ app.get('/info', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
-        if (person) {
-          response.json(person)
-        } else {
-          response.status(404).send()
-        }
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).send()
+      }
     })
     .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
   const person = {
     name: body.name,
