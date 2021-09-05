@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
+const config = require('./utils/config')
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -13,8 +14,7 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb+srv://fullstack:fullstackopen@cluster0.uavg9.mongodb.net/blogs?retryWrites=true&w=majority'
-mongoose.connect(mongoUrl)
+mongoose.connect(config.MONGODB_URI)
     .then(() => {
         console.log('connected to MongoDB')
     })
