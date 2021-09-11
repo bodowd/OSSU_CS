@@ -116,3 +116,27 @@ describe('favorite blog', () => {
         expect(result).toEqual(trueAnswer)
     })
 })
+
+// ------ author with most blogs tests
+describe('author with the most blogs', () => {
+    test('when list has many blogs', () => {
+        const result = listHelper.mostBlogs(listWithManyBlogs)
+        const trueAnswer = {
+            author: "Robert C. Martin",
+            blogs: 3
+        }
+        expect(result).toEqual(trueAnswer)
+    })
+})
+
+// ------- author with most likes
+describe('author with the most likes', () => {
+    test('when list has many blogs', () => {
+        const result = listHelper.mostLikes(listWithManyBlogs)
+        const trueAnswer = {
+            author: "Edsger W. Dijkstra",
+            likes: 17
+        }
+        expect(result).toEqual(trueAnswer)
+    })
+})
