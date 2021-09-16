@@ -2,4 +2,15 @@ npm init
 npm install express
 npm install --save-dev nodemon
 npm install --save-dev jest
+npm install --save-dev supertest
+npm install --save-dev cross-env
 # edit package.json under "scripts", include "test" : "jest --verbose"
+# change test environments in package.json
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
+  }
+
+  
+
