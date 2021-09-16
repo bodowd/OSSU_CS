@@ -74,6 +74,20 @@ test('a blog without likes is added and should be given likes of 0', async () =>
     expect(titles).toContain('test3')
 })
 
+test('a blog submission without title and url should return 400', async () => {
+    const newBlog = {
+        'author': 'this should fail'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
