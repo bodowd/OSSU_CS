@@ -84,8 +84,24 @@ test('a blog submission without title and url should return 400', async () => {
         .send(newBlog)
         .expect(400)
         .expect('Content-Type', /application\/json/)
+})
 
+describe('deletion of a blog', () => {
+    test('succeeds with statuscode 204 if id is valid', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
 
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+        
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).not.toContain(blogToDelete.title)
+    })
 })
 
 afterAll(() => {
