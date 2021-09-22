@@ -104,6 +104,31 @@ describe('deletion of a blog', () => {
     })
 })
 
+describe('update of a blog', () => {
+    test('succeeds with statuscode 200 if blog is updated', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+
+        const updatedBlog = {
+            ...blogToUpdate,
+            'likes': 10
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+
+        const edited = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+        expect(edited.likes).toBe(10)
+
+    })
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
