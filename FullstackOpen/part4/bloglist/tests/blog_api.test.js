@@ -4,6 +4,7 @@ const app = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const helper = require('./test_helper')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
@@ -160,6 +161,22 @@ describe('when there is initially one user in db', () => {
 
         const usernames = usersAtEnd.map(u => u.username)
         expect(usernames).toContain(newUser.username)
+    })
+
+    test('does not succeed when password is too short', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: "mmmmmm",
+            name: 'Matt',
+            password: 'k'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
     })
 })
 
