@@ -21,8 +21,8 @@ Content-Type: application/json
 
 {
     "notes": [],
-    "username": "root",
-    "name": "Superuser",
+    "username": "mluukkai",
+    "name": "Matti",
     "password": "salainen"
 }
 

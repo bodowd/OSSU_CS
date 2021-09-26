@@ -3,7 +3,11 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (req, res) => {
-    const users = await User.find({})
+    // mongoose join is done with the populate method
+    // the parameter given to the populate method defines that the ids referencing the note objects in the notes field of the user document will be replaced by the referenced note documents
+    // select fields we want to include from the documents -- content and date
+    const users = await User.find({}).populate('notes', { content: 1, date: 1 })
+
     res.json(users)
 })
 

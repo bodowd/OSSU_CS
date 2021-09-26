@@ -74,15 +74,38 @@ describe('viewing a specific note', () => {
 })
 
 describe('addition of a new note', () => {
+    let headers
+    beforeEach(async () => {
+        const newUser = {
+            username: 'mluukkai',
+            password: 'salainen'
+        }
+        
+        // register the user
+        await api
+            .post('/api/users/')
+            .send(newUser)
+
+        const result = await api
+            .post('/api/login')
+            .send(newUser)
+
+        // store the token which is returned and stored in result from the login procedure
+        headers = {
+            'Authorization': `bearer ${result.body.token}`
+        }
+    })
+    
     test('succeeds with valid data', async () => {
         const newNote = {
             content: 'async/await simplifies making async calls',
-            important: true
+            important: true,
         }
 
         await api
             .post('/api/notes')
             .send(newNote)
+            .set(headers)
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
@@ -104,6 +127,7 @@ describe('addition of a new note', () => {
 
         await api
             .post('/api/notes')
+            .set(headers)
             .send(newNote)
             .expect(400)
 
