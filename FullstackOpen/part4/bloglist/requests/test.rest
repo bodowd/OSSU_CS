@@ -5,15 +5,14 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "test2",
-  "author": "na",
+  "title": "Microservices",
+  "author": "Martin Fowler",
   "url": "google.com",
-  "likes": 0,
-  "id": 123
+  "likes": 0
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/614b28c04f21191965ac8e0a
+DELETE http://localhost:3003/api/blogs/6151ac749da91373436f5ce2
 
 ###
 GET http://localhost:3003/api/users
