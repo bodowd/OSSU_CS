@@ -33,59 +33,86 @@ test('unique identifier property of the blog posts is named id', async () => {
     expect(response.body[0].id).toBeDefined()
 })
 
-test('a valid blog can be added', async () => {
-    const newBlog = {
-        "title": "test2",
-        "author": "na",
-        "url": "google.com",
-        "likes": 0
+describe('addition of a blog', () => {
+    let headers
+    beforeEach(async () => {
+        const newUser = {
+            username: 'mluukkai',
+            password: 'salainen'
         }
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        
+        // register the user
+        await api
+            .post('/api/users/')
+            .send(newUser)
 
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-    
-    const titles = blogsAtEnd.map(b => b.title)
-    expect(titles).toContain('test2')
-})
+        // login the user
+        const result = await api
+            .post('/api/login')
+            .send(newUser)
 
-test('a blog without likes is added and should be given likes of 0', async () => {
-    const newBlog = {
-        'title': 'test3',
-        'author': 'Roger',
-        'url': 'google.com'
-    }
+        headers = {'Authorization': `bearer ${result.body.token}`}
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+    })
 
-    const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-    
-    const likes = blogsAtEnd.map(b => b.likes)
-    expect(likes).toContain(0)
+    test('a valid blog can be added', async () => {
+        const newBlog = {
+            "title": "test2",
+            "author": "na",
+            "url": "google.com",
+            "likes": 0
+            }
+        
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
-    const titles = blogsAtEnd.map(b => b.title)
-    expect(titles).toContain('test3')
-})
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+        
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).toContain('test2')
+    })
 
-test('a blog submission without title and url should return 400', async () => {
-    const newBlog = {
-        'author': 'this should fail'
-    }
+    test('a blog without likes is added and should be given likes of 0', async () => {
+        const newBlog = {
+            'title': 'test3',
+            'author': 'Roger',
+            'url': 'google.com'
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+        
+        const likes = blogsAtEnd.map(b => b.likes)
+        expect(likes).toContain(0)
+
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).toContain('test3')
+    })
+
+    test('a blog submission without title and url should return 400', async () => {
+        const newBlog = {
+            'author': 'this should fail'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+    })
 })
 
 describe('deletion of a blog', () => {
