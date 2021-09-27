@@ -141,7 +141,7 @@ describe('when there is initially one user in db', () => {
         await user.save()
     })
 
-    test('creation succeeds with fresh username', async () => {
+    test('creation of new user succeeds with fresh username', async () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
@@ -163,7 +163,7 @@ describe('when there is initially one user in db', () => {
         expect(usernames).toContain(newUser.username)
     })
 
-    test('does not succeed when password is too short', async () => {
+    test('creation of new user does not succeed when password is too short', async () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
@@ -177,6 +177,30 @@ describe('when there is initially one user in db', () => {
             .send(newUser)
             .expect(400)
             .expect('Content-Type', /application\/json/)
+    })
+})
+
+describe('login', () => {
+    let user
+    beforeEach(async () => {
+        const newUser = {
+            username: 'mluukkai',
+            password: 'salainen'
+        }
+
+        await api
+            .post('/api/users/')
+            .send(newUser)
+        user = newUser
+    })
+    test('succeeds', async () => {
+
+       await api
+            .post('/api/login')
+            .send(user)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
     })
 })
 
