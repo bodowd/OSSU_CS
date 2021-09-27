@@ -37,7 +37,8 @@ describe('addition of a blog', () => {
     let headers
     beforeEach(async () => {
         const newUser = {
-            username: 'mluukkai',
+            name: 'Jimmy Neutron',
+            username: 'jneutron',
             password: 'salainen'
         }
         

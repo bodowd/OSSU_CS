@@ -1,3 +1,12 @@
+const tokenExtractor = (request, response, next) => {
+    const auth = request.get('authorization')
+    if (auth && auth.toLowerCase().startsWith('bearer ')){
+        request.token =  auth.substring(7)
+    }
+    next()
+}
+
+
 const errorHandler = (error, request, response) => {
     if (error.name === 'CastError'){
         return response.status(400).send({ error: 'malformatted id' })
@@ -16,5 +25,6 @@ const errorHandler = (error, request, response) => {
 }
 
 module.exports = {
-    errorHandler
+    errorHandler,
+    tokenExtractor
 }
