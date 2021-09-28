@@ -3,10 +3,10 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MTUwZDg0OWI2OTdjMDIxMWI0NTc3ZjEiLCJpYXQiOjE2MzI3NjgzODEsImV4cCI6MTYzMjc3MTk4MX0.d8akTwJu43jtGPXNC0NENyI1cusHYy4o9OAvi0X0fxY 
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MTUwZDg0OWI2OTdjMDIxMWI0NTc3ZjEiLCJpYXQiOjE2MzI4NTc1ODQsImV4cCI6MTYzMjg2MTE4NH0.e6LOEGh5laAuxQEIoJZ31fg0r56Wx54XVSHnMB-8hzs 
 
 {
-  "title": "Microservices, test post 3",
+  "title": "Microservices, test post 5",
   "author": "Martin Fowler",
   "url": "google.com",
   "likes": 0,
@@ -14,7 +14,8 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sd
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/6151ac749da91373436f5ce2
+DELETE http://localhost:3003/api/blogs/61536edca72bef7fdabbeef3
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MTUwZDg0OWI2OTdjMDIxMWI0NTc3ZjEiLCJpYXQiOjE2MzI4NTc1ODQsImV4cCI6MTYzMjg2MTE4NH0.e6LOEGh5laAuxQEIoJZ31fg0r56Wx54XVSHnMB-8hzs 
 
 ###
 GET http://localhost:3003/api/users

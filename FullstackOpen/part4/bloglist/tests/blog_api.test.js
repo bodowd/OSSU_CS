@@ -8,12 +8,18 @@ const bcrypt = require('bcrypt')
 
 const api = supertest(app)
 
-beforeEach(async () => {
-    await Blog.deleteMany({})
 
-    const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blog => blog.save())
-    await Promise.all(promiseArray)
+//     const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
+//     const userObjects = helper.initialUsers.map(user => new User(user))
+//     const promiseArray = blogObjects.map(blog => blog.save())
+//     const userPromiseArray = userObjects.map(user => user.save())
+//     await Promise.all(promiseArray)
+//     await Promise.all(userPromiseArray)
+// })
+beforeEach(async () => {
+    // reset the DBs
+    await Blog.deleteMany({})
+    await User.deleteMany({})
 })
 
 test('blogs are returned as json', async () => {
@@ -23,153 +29,17 @@ test('blogs are returned as json', async () => {
         .expect('Content-Type', /application\/json/)
 }, 100000)
 
-test('correct number of initial blogs', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(6)
-})
+// test('correct number of initial blogs', async () => {
+//     const response = await api.get('/api/blogs')
+//     expect(response.body).toHaveLength(6)
+// })
 
-test('unique identifier property of the blog posts is named id', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body[0].id).toBeDefined()
-})
-
-describe('addition of a blog', () => {
-    let headers
-    beforeEach(async () => {
-        const newUser = {
-            name: 'Jimmy Neutron',
-            username: 'jneutron',
-            password: 'salainen'
-        }
-        
-        // register the user
-        await api
-            .post('/api/users/')
-            .send(newUser)
-
-        // login the user
-        const result = await api
-            .post('/api/login')
-            .send(newUser)
-
-        headers = {'Authorization': `bearer ${result.body.token}`}
-
-    })
-
-    test('a valid blog can be added', async () => {
-        const newBlog = {
-            "title": "test2",
-            "author": "na",
-            "url": "google.com",
-            "likes": 0
-            }
-        
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .set(headers)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
-
-        const blogsAtEnd = await helper.blogsInDb()
-        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-        
-        const titles = blogsAtEnd.map(b => b.title)
-        expect(titles).toContain('test2')
-    })
-
-    test('a blog without likes is added and should be given likes of 0', async () => {
-        const newBlog = {
-            'title': 'test3',
-            'author': 'Roger',
-            'url': 'google.com'
-        }
-
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .set(headers)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
-
-        const blogsAtEnd = await helper.blogsInDb()
-        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-        
-        const likes = blogsAtEnd.map(b => b.likes)
-        expect(likes).toContain(0)
-
-        const titles = blogsAtEnd.map(b => b.title)
-        expect(titles).toContain('test3')
-    })
-
-    test('a blog submission without title and url should return 400', async () => {
-        const newBlog = {
-            'author': 'this should fail'
-        }
-
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .set(headers)
-            .expect(400)
-            .expect('Content-Type', /application\/json/)
-    })
-})
-
-describe('deletion of a blog', () => {
-    test('succeeds with statuscode 204 if id is valid', async () => {
-        const blogsAtStart = await helper.blogsInDb()
-        const blogToDelete = blogsAtStart[0]
-
-        await api
-            .delete(`/api/blogs/${blogToDelete.id}`)
-            .expect(204)
-
-        const blogsAtEnd = await helper.blogsInDb()
-
-        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
-        
-        const titles = blogsAtEnd.map(b => b.title)
-        expect(titles).not.toContain(blogToDelete.title)
-    })
-})
-
-describe('update of a blog', () => {
-    test('succeeds with statuscode 200 if blog is updated', async () => {
-        const blogsAtStart = await helper.blogsInDb()
-        const blogToUpdate = blogsAtStart[0]
-
-        const updatedBlog = {
-            ...blogToUpdate,
-            'likes': 10
-        }
-
-        await api
-            .put(`/api/blogs/${blogToUpdate.id}`)
-            .send(updatedBlog)
-            .expect(200)
-            .expect('Content-Type', /application\/json/)
-        
-        const blogsAtEnd = await helper.blogsInDb()
-        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
-
-        const edited = blogsAtEnd.find(b => b.id === blogToUpdate.id)
-        expect(edited.likes).toBe(10)
-
-    })
-})
-
-describe('when there is initially one user in db', () => {
-    beforeEach(async () => {
-        await User.deleteMany({})
-
-        const passwordHash = await bcrypt.hash('sekret', 10)
-        const user = new User({ username: 'root', passwordHash })
-
-        await user.save()
-    })
-
-    test('creation of new user succeeds with fresh username', async () => {
+// test('unique identifier property of the blog posts is named id', async () => {
+//     const response = await api.get('/api/blogs')
+//     expect(response.body[0].id).toBeDefined()
+// })
+describe('creation of new users', () => {
+    test('succeeds with fresh username', async () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
@@ -231,6 +101,195 @@ describe('login', () => {
 
     })
 })
+
+describe('addition of a blog', () => {
+    let headers
+    beforeEach(async () => {
+        const newUser = {
+            name: 'Jimmy Neutron',
+            username: 'jneutron',
+            password: 'salainen'
+        }
+
+        // register the user
+        await api
+            .post('/api/users/')
+            .send(newUser)
+
+        // login the user
+        const result = await api
+            .post('/api/login')
+            .send(newUser)
+
+        headers = {'Authorization': `bearer ${result.body.token}`}
+    })
+
+    test('a valid blog can be added', async () => {
+        const newBlog = {
+            "title": "test2",
+            "author": "na",
+            "url": "google.com",
+            "likes": 0
+            }
+        
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).toContain('test2')
+    })
+
+    test('a blog without likes is added and should be given likes of 0', async () => {
+        const newBlog = {
+            'title': 'test3',
+            'author': 'Roger',
+            'url': 'google.com'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        
+        const likes = blogsAtEnd.map(b => b.likes)
+        expect(likes).toContain(0)
+
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).toContain('test3')
+    })
+
+    test('a blog submission without title and url should return 400', async () => {
+        const newBlog = {
+            'author': 'this should fail'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+    })
+})
+
+describe('deletion of a blog', () => {
+    let headers
+    beforeEach(async () => {
+        const newUser = {
+            name: 'Jimmy Neutron',
+            username: 'jneutron',
+            password: 'salainen'
+        }
+
+        // register the user
+        await api
+            .post('/api/users/')
+            .send(newUser)
+
+        // login the user
+        const result = await api
+            .post('/api/login')
+            .send(newUser)
+
+        headers = {'Authorization': `bearer ${result.body.token}`}
+        
+        const newBlog = {
+            'title': 'test3',
+            'author': 'Jimmy',
+            'url': 'google.com'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+
+    })
+    test('succeeds with statuscode 204 if id is valid', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set(headers)
+            .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        
+        const titles = blogsAtEnd.map(b => b.title)
+        expect(titles).not.toContain(blogToDelete.title)
+    })
+    test('fails if the user is not the creator of the blog', async () => {
+
+    })
+})
+
+describe('update of a blog', () => {
+    beforeEach(async () => {
+        const newUser = {
+            name: 'Jimmy Neutron',
+            username: 'jneutron',
+            password: 'salainen'
+        }
+
+        // register the user
+        await api
+            .post('/api/users/')
+            .send(newUser)
+
+        // login the user
+        const result = await api
+            .post('/api/login')
+            .send(newUser)
+
+        const headers = {'Authorization': `bearer ${result.body.token}`}
+        
+        const newBlog = {
+            'title': 'test3',
+            'author': 'Jimmy',
+            'url': 'google.com'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .set(headers)
+
+    })
+
+    test('succeeds with statuscode 200 if blog is updated', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = blogsAtStart[0]
+        const updatedBlog = {
+            ...blogToUpdate,
+            'likes': 10
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+
+        const edited = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+        expect(edited.likes).toBe(10)
+
+    })
+})
+
 
 afterAll(() => {
     mongoose.connection.close()

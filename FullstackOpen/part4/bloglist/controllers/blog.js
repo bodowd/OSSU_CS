@@ -9,14 +9,6 @@ bloglistRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-// const getTokenFrom = request => {
-//   const auth = request.get('authorization')
-//   if (auth && auth.toLowerCase().startsWith('bearer ')){
-//     return auth.substring(7)
-//   }
-//   return null
-// }
-
 bloglistRouter.post('/', middleware.tokenExtractor, async (request, response) => {
   const body = request.body
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
@@ -64,9 +56,26 @@ bloglistRouter.put('/:id', async (request, response) => {
 
 })
 
-bloglistRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+bloglistRouter.delete('/:id', middleware.tokenExtractor, async (request, response) => {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  if (!request.token || !decodedToken.id){
+    return response.json(401).json({ error: 'token missing or invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+  const blog = await Blog.findById(request.params.id)
+
+  
+  if (blog.user.toString() === user.id.toString()){
+    await blog.remove()
+    // also remove it from the list of blogs in user
+    user.blogs = user.blogs.filter(b => b.id.toString !== request.params.id.toString())
+    await user.save()
+    response.status(204).end()
+  } else {
+    return response.json(401).json({ error: 'only the creator can delete the blog '})
+  }
 })
 
 module.exports = bloglistRouter
