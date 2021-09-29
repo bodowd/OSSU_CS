@@ -180,6 +180,21 @@ describe('addition of a blog', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
     })
+
+    test('fails with statuscode 401 when no token is provided', async () => {
+        const newBlog = {
+            "title": "test2",
+            "author": "na",
+            "url": "google.com",
+            "likes": 0
+            }
+        
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(401)
+            .expect('Content-Type', /application\/json/)
+    })
 })
 
 describe('deletion of a blog', () => {
