@@ -1,0 +1,28 @@
+GET http://localhost:3001/api/notes
+
+###
+GET http://localhost:3001/api/notes/6124920328e4eef86f174955
+
+###
+
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2MTRmMDczMmFmMmRlZjdlMTQ5YWRiYTEiLCJpYXQiOjE2MzI2NTcxMDR9.4UJth-aOOkUr-kyvZj0nsH1CMcWYBRBBwJa0hIpYIzw 
+
+{
+    "content": "VS Code REST client",
+    "important": false,
+    "userId":"614e2fe3b7dcaf160af1bd34"
+}
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "this is a new note",
+    "important": false,
+    "userId": "614f0732af2def7e149adba1"
+}
+###
+GET http://localhost:3001/api/users

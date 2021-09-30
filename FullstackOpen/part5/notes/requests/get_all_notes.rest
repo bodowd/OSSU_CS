@@ -1,0 +1,30 @@
+GET http://localhost:3001/api/notes
+
+###
+GET http://localhost:3001/api/notes/6123de5bc9316a9143fd3aaa
+
+###
+DELETE http://localhost:3001/api/notes/6124a3da5175450e7b524057
+
+###
+PUT http://localhost:3001/api/notes/612491d553cf2ef829497a2f
+Content-Type: application/json
+
+{
+    "content": "VS Code REST client",
+    "important": false
+}
+
+###
+POST http://localhost:3001/api/users/
+Content-Type: application/json
+
+{
+    "notes": [],
+    "username": "mluukkai",
+    "name": "Matti",
+    "password": "salainen"
+}
+
+###
+GET http://localhost:3001/api/users
