@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Note from './components/Note'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
 // we don't define `noteService` explicity. we just name what is exported from notes service as noteService
 import noteService from './services/notes'
 import loginService from './services/login'
@@ -58,11 +60,11 @@ const App = () => {
       })
   }
 
-  const handleNoteChange = (event) => {
-    // do not need to call event.preventDefault() like we did above because there is no default action that occurs on an input change, unlike on a form submission
-    console.log(event.target.value)
-    setNewNote(event.target.value)
-  }
+  // const handleNoteChange = (event) => {
+  //   // do not need to call event.preventDefault() like we did above because there is no default action that occurs on an input change, unlike on a form submission
+  //   console.log(event.target.value)
+  //   setNewNote(event.target.value)
+  // }
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
@@ -105,25 +107,23 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input type="text" value={username} name="Username" onChange={({target}) => setUsername(target.value)} />
-      </div>
-      <div>
-        password
-        <input type="text" value={password} name="Password" onChange={({target}) => setPassword(target.value)} />
-      </div>
-      <button type="submit">login</button>
-    </form>
+      <LoginForm 
+        username={username}
+        password={password}
+        handleSubmit={handleLogin}
+        handleUsernameChange={({ target }) => setUsername(target.value)} 
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        />
   )
 
   const noteForm = () => (
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button type='submit'>save</button>
-      </form>
+    <NoteForm 
+      handleSubmit={addNote}
+      newNote={newNote}
+      handleNoteChange={({ target }) => setNewNote(target.value)}
+    />
   )
+
 
   return (
     <div>
