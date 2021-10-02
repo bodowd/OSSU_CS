@@ -52,7 +52,11 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={errorMessage} />
       {user === null ?
-      loginForm() :
+      <div>
+        <h2>Log in to application</h2>
+        {loginForm()}
+      </div>
+     :
       <div>
         <p>{user.name} logged in</p>
         {blogs.map(blog => <Blog key={blog.id} blog={blog}/>)}
