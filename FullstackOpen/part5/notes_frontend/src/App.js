@@ -28,6 +28,16 @@ const App = () => {
   // // the second parameter specifies how often the effect is run. If the second parameter is an empty array, the effect is only run along with the first render of the component
   useEffect(hook, [])
 
+  // handle the first loading of the page. checks localStorage
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
+
   console.log('render', notes.length, 'notes');
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
@@ -92,9 +102,14 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
+      // returns token, username, and name from backend
       const user = await loginService.login({
         username, password,
       })
+
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+      // save the token from authorization header so that notes can be added in the backend
+      noteService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -104,6 +119,11 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
+  }
+
+  const handleLogout = async (event) => {
+    window.localStorage.removeItem('loggedNoteappUser')
+    window.location.reload(false)
   }
 
   const loginForm = () => (
@@ -139,6 +159,7 @@ const App = () => {
         <div>
           <p>{user.name} logged-in</p>
           {noteForm()}
+          <button onClick={ () => handleLogout()}>logout</button>
         </div>
       }
 
