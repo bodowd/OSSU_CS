@@ -11,7 +11,7 @@ const App = () => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -32,6 +32,13 @@ const App = () => {
     }
   }, [])
 
+  const notifyWith = (message, type='success') => {
+    setNotification({message, type})
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -44,11 +51,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      notifyWith(`welcome back ${user.name}!`)
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      notifyWith('wrong username or password', 'error')
     }
   }
 
@@ -81,9 +86,11 @@ const App = () => {
         setNewBlogTitle('')
         setNewBlogAuthor('')
         setNewBlogUrl('')
+        notifyWith(`${returnedBlog.title} by ${returnedBlog.author} added!`)
       })
       .catch(error => {
         console.log(error.message)
+        notifyWith('error adding blog', 'error')
       })
 
   }
@@ -104,7 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage} />
+      <Notification notification={notification} />
       {user === null ?
       <div>
         <h2>Log in to application</h2>
