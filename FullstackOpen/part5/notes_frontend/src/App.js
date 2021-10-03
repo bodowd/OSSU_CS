@@ -3,6 +3,7 @@ import Note from './components/Note'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
+import Togglable from "./components/Togglable";
 // we don't define `noteService` explicity. we just name what is exported from notes service as noteService
 import noteService from './services/notes'
 import loginService from './services/login'
@@ -123,25 +124,30 @@ const App = () => {
 
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedNoteappUser')
+    // refresh the page
     window.location.reload(false)
   }
 
   const loginForm = () => (
-      <LoginForm 
-        username={username}
-        password={password}
-        handleSubmit={handleLogin}
-        handleUsernameChange={({ target }) => setUsername(target.value)} 
-        handlePasswordChange={({ target }) => setPassword(target.value)}
-        />
+      <Togglable buttonLabel="log in">
+        <LoginForm 
+          username={username}
+          password={password}
+          handleSubmit={handleLogin}
+          handleUsernameChange={({ target }) => setUsername(target.value)} 
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          />
+      </Togglable>
   )
 
   const noteForm = () => (
-    <NoteForm 
-      handleSubmit={addNote}
-      newNote={newNote}
-      handleNoteChange={({ target }) => setNewNote(target.value)}
-    />
+    <Togglable buttonLabel="new note">
+      <NoteForm 
+        handleSubmit={addNote}
+        newNote={newNote}
+        handleNoteChange={({ target }) => setNewNote(target.value)}
+      />
+    </Togglable>
   )
 
 
