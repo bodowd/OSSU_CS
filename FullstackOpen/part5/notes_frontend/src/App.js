@@ -11,7 +11,6 @@ import loginService from './services/login'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
@@ -43,39 +42,13 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
 
-  const addNote = (event) => {
-    // prevents the default action of submitting a form which would case a page reload among other things
-    event.preventDefault()
-    // console.log('button clicked', event.target);
-    const noteObject = {
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() < 0.5
-    }
-    // // does not mutate the original notes array but rather creates a copy of the array with the new item added to the end
-    // setNotes(notes.concat(noteObject))
-    // // reset the value of newNote state
-    // setNewNote('')
-    // console.log(notes)
-
-    // add note to db and to the application state to update the note list
+  const addNote = (noteObject) => {
     noteService
       .create(noteObject)
       .then(returnedNote => {
-        // after the server responds that it has added the new note, update the note state to display it with the response data
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
-      })
-      .catch(error => {
-        console.log(error.message)
       })
   }
-
-  // const handleNoteChange = (event) => {
-  //   // do not need to call event.preventDefault() like we did above because there is no default action that occurs on an input change, unlike on a form submission
-  //   console.log(event.target.value)
-  //   setNewNote(event.target.value)
-  // }
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
@@ -130,6 +103,7 @@ const App = () => {
 
   const loginForm = () => (
       <Togglable buttonLabel="log in">
+        {/* child components are the react elements that we define between the opening and closing tags of a component */}
         <LoginForm 
           username={username}
           password={password}
@@ -143,9 +117,7 @@ const App = () => {
   const noteForm = () => (
     <Togglable buttonLabel="new note">
       <NoteForm 
-        handleSubmit={addNote}
-        newNote={newNote}
-        handleNoteChange={({ target }) => setNewNote(target.value)}
+        createNote={addNote}
       />
     </Togglable>
   )

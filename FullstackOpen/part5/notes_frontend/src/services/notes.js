@@ -14,7 +14,7 @@ const getAll = () => {
 }
 
 const create = async newObject => {
-    // set the token to the Authorization header
+    // set the token to the Authorization header and the header is given to axios as the third parameter of the post method
     const config = {
         headers: { Authorization: token }
     }
