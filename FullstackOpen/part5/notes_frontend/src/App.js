@@ -13,8 +13,6 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const hook = () => {
@@ -73,27 +71,25 @@ const App = () => {
       })
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (userObject) => {
     try {
       // returns token, username, and name from backend
-      const user = await loginService.login({
-        username, password,
-      })
+      const user = await loginService.login(userObject)
 
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       // save the token from authorization header so that notes can be added in the backend
       noteService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
+      console.log(exception)
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
+
   }
+
 
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedNoteappUser')
@@ -104,12 +100,8 @@ const App = () => {
   const loginForm = () => (
       <Togglable buttonLabel="log in">
         {/* child components are the react elements that we define between the opening and closing tags of a component */}
-        <LoginForm 
-          username={username}
-          password={password}
-          handleSubmit={handleLogin}
-          handleUsernameChange={({ target }) => setUsername(target.value)} 
-          handlePasswordChange={({ target }) => setPassword(target.value)}
+          <LoginForm
+            doLogin={handleLogin}
           />
       </Togglable>
   )
