@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Note from './components/Note'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -41,6 +41,7 @@ const App = () => {
   const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
 
   const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
     noteService
       .create(noteObject)
       .then(returnedNote => {
@@ -81,7 +82,6 @@ const App = () => {
       noteService.setToken(user.token)
       setUser(user)
     } catch (exception) {
-      console.log(exception)
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
@@ -105,9 +105,12 @@ const App = () => {
           />
       </Togglable>
   )
-
+  
+  // the useRef hook is used to create a noteFormRef ref which acts as a reference to the component. This hook ensures 
+  // the same reference is kept throughout re-renders of the component
+  const noteFormRef = useRef()
   const noteForm = () => (
-    <Togglable buttonLabel="new note">
+    <Togglable buttonLabel="new note" ref={noteFormRef}>
       <NoteForm 
         createNote={addNote}
       />

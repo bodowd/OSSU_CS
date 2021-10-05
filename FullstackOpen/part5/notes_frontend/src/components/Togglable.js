@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useImperativeHandle } from 'react'
 
-const Togglable = (props) => {
+// the function that creates the component is wrapped inside of a forwardRef function call. This way the componenet can access the ref that is assigned to it
+const Togglable = React.forwardRef((props, ref) => {
     const [visible, setVisible] = useState(false)
 
     const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -9,6 +10,14 @@ const Togglable = (props) => {
     const toggleVisibility = () => {
         setVisible(!visible)
     }
+
+    // useImperativeHandle makes the toggleVisibility function available outside of the component which we will use 
+    // by calling noteFormRef.current.toggleVisibility() after a new note has been created in App()
+    useImperativeHandle(ref, () => {
+        return {
+            toggleVisibility
+        }
+    })
 
     return (
         <div>
@@ -21,6 +30,6 @@ const Togglable = (props) => {
             </div>
         </div>
     )
-}
+})
 
 export default Togglable
