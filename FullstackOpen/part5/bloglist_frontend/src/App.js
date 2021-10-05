@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -95,17 +96,18 @@ const App = () => {
 
   }
 
-
   const blogForm = () => (
-    <BlogForm
-      handleSubmit={addBlog}
-      title={newBlogTitle}
-      handleTitleChange={({ target }) => setNewBlogTitle(target.value)}
-      author={newBlogAuthor}
-      handleAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
-      url={newBlogUrl}
-      handleUrlChange={({ target }) => setNewBlogUrl(target.value)}
-      />
+    <Togglable buttonLabel="new blog">
+      <BlogForm
+        handleSubmit={addBlog}
+        title={newBlogTitle}
+        handleTitleChange={({ target }) => setNewBlogTitle(target.value)}
+        author={newBlogAuthor}
+        handleAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
+        url={newBlogUrl}
+        handleUrlChange={({ target }) => setNewBlogUrl(target.value)}
+        />
+    </Togglable>
   )
 
   return (
@@ -121,7 +123,6 @@ const App = () => {
       <div>
         <p>{user.name} logged in</p>
         <button onClick={() => handleLogout()}>logout</button>
-        <h2>create new</h2>
         {blogForm()}
         {blogs.map(blog => <Blog key={blog.id} blog={blog}/>)}
       </div>
