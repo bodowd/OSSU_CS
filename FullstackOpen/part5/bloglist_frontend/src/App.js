@@ -60,6 +60,21 @@ const App = () => {
     window.location.reload(false)
   }
 
+  const handleLike = async (id, dislike) => {
+    if (!dislike) {
+      var to_add = 1
+    } else {
+      var to_add = -1
+    }
+    // update the backend first
+    const blogToLike = blogs.find(b => b.id === id)
+    const likedBlog = {...blogToLike, likes: blogToLike.likes + to_add, user: blogToLike.user.id}
+    await blogService.update(blogToLike.id, likedBlog)
+    // update the front end with the new number of likes
+    setBlogs(blogs.map(b => b.id === id ? {...blogToLike, likes: blogToLike.likes + to_add } : b ))
+  }
+
+
   const loginForm = () => (
     <LoginForm 
       username={username}
@@ -104,7 +119,7 @@ const App = () => {
         <p>{user.name} logged in</p>
         <button onClick={() => handleLogout()}>logout</button>
         {blogForm()}
-        {blogs.map(blog => <Blog key={blog.id} blog={blog} user={user}/>)}
+        {blogs.map(blog => <Blog key={blog.id} blog={blog} user={user} handleLike={handleLike}/>)}
       </div>
       }
     </div>

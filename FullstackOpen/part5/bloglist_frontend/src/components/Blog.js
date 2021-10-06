@@ -1,6 +1,6 @@
-import userEvent from '@testing-library/user-event'
 import React, { useState } from 'react'
-const Blog = ({blog, user}) => {
+
+const Blog = ({blog, user, handleLike }) => {
     const [visible, setVisible] = useState(false)
 
     const hideWhenVisible = {display: visible ? 'none' : ''}
@@ -19,6 +19,7 @@ const Blog = ({blog, user}) => {
 
     }
 
+
     return (
     <div style={blogStyle}>
         <div>
@@ -32,7 +33,8 @@ const Blog = ({blog, user}) => {
             </div>
             <div>
                 likes: {blog.likes}
-                <button>like</button>
+                <button onClick={() => handleLike(blog.id, false)}>like</button>
+                <button onClick={() => handleLike(blog.id, true)}>dislike</button>
             </div>
             <div>
                 {user.name}
