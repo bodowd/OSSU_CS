@@ -64,7 +64,7 @@ const App = () => {
     if (!dislike) {
       var to_add = 1
     } else {
-      var to_add = -1
+      to_add = -1
     }
     // update the backend first
     const blogToLike = blogs.find(b => b.id === id)
@@ -119,7 +119,8 @@ const App = () => {
         <p>{user.name} logged in</p>
         <button onClick={() => handleLogout()}>logout</button>
         {blogForm()}
-        {blogs.map(blog => <Blog key={blog.id} blog={blog} user={user} handleLike={handleLike}/>)}
+        {/* first sort blogs list (consisting of blog objects) by their list attribute then create populate the blog components */}
+        {blogs.sort(function(a,b){return b.likes-a.likes}).map(blog => <Blog key={blog.id} blog={blog} user={user} handleLike={handleLike}/>)}
       </div>
       }
     </div>
