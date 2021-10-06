@@ -74,6 +74,15 @@ const App = () => {
     setBlogs(blogs.map(b => b.id === id ? {...blogToLike, likes: blogToLike.likes + to_add } : b ))
   }
 
+  const handleRemove = async (id) => {
+    const blogToRemove = blogs.find(b => b.id === id)
+    const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}?`)
+    if (ok) {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(b => b.id !== id))
+    }
+  }
+
 
   const loginForm = () => (
     <LoginForm 
@@ -120,7 +129,15 @@ const App = () => {
         <button onClick={() => handleLogout()}>logout</button>
         {blogForm()}
         {/* first sort blogs list (consisting of blog objects) by their list attribute then create populate the blog components */}
-        {blogs.sort(function(a,b){return b.likes-a.likes}).map(blog => <Blog key={blog.id} blog={blog} user={user} handleLike={handleLike}/>)}
+        {blogs.sort(function(a,b){return b.likes-a.likes})
+          .map(blog => 
+            <Blog 
+              key={blog.id} 
+              blog={blog}
+              user={user} 
+              handleLike={handleLike} 
+              handleRemove={handleRemove}
+              own={user.username === blog.user.username} />)}
       </div>
       }
     </div>
