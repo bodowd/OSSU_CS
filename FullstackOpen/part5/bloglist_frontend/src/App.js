@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-      )
+    )
   }, [])
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const App = () => {
   }, [])
 
   const notifyWith = (message, type='success') => {
-    setNotification({message, type})
+    setNotification({ message, type })
     setTimeout(() => {
       setNotification(null)
     }, 5000)
@@ -55,7 +55,7 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.removeItem('loggedBlogappUser')
     window.location.reload(false)
   }
@@ -68,10 +68,10 @@ const App = () => {
     }
     // update the backend first
     const blogToLike = blogs.find(b => b.id === id)
-    const likedBlog = {...blogToLike, likes: blogToLike.likes + to_add, user: blogToLike.user.id}
+    const likedBlog = { ...blogToLike, likes: blogToLike.likes + to_add, user: blogToLike.user.id }
     await blogService.update(blogToLike.id, likedBlog)
     // update the front end with the new number of likes
-    setBlogs(blogs.map(b => b.id === id ? {...blogToLike, likes: blogToLike.likes + to_add } : b ))
+    setBlogs(blogs.map(b => b.id === id ? { ...blogToLike, likes: blogToLike.likes + to_add } : b ))
   }
 
   const handleRemove = async (id) => {
@@ -85,13 +85,13 @@ const App = () => {
 
 
   const loginForm = () => (
-    <LoginForm 
+    <LoginForm
       username={username}
       password={password}
       handleSubmit={handleLogin}
       handleUsernameChange={({ target }) => setUsername(target.value)}
       handlePasswordChange={({ target }) => setPassword(target.value)}
-      />
+    />
   )
 
   const addBlog = (blogObject) => {
@@ -119,26 +119,26 @@ const App = () => {
       <h2>blogs</h2>
       <Notification notification={notification} />
       {user === null ?
-      <div>
-        <h2>Log in to application</h2>
-        {loginForm()}
-      </div>
-     :
-      <div>
-        <p>{user.name} logged in</p>
-        <button onClick={() => handleLogout()}>logout</button>
-        {blogForm()}
-        {/* first sort blogs list (consisting of blog objects) by their list attribute then create populate the blog components */}
-        {blogs.sort(function(a,b){return b.likes-a.likes})
-          .map(blog => 
-            <Blog 
-              key={blog.id} 
-              blog={blog}
-              user={user} 
-              handleLike={handleLike} 
-              handleRemove={handleRemove}
-              own={user.username === blog.user.username} />)}
-      </div>
+        <div>
+          <h2>Log in to application</h2>
+          {loginForm()}
+        </div>
+        :
+        <div>
+          <p>{user.name} logged in</p>
+          <button onClick={() => handleLogout()}>logout</button>
+          {blogForm()}
+          {/* first sort blogs list (consisting of blog objects) by their list attribute then create populate the blog components */}
+          {blogs.sort(function(a,b){return b.likes-a.likes})
+            .map(blog =>
+              <Blog
+                key={blog.id}
+                blog={blog}
+                user={user}
+                handleLike={handleLike}
+                handleRemove={handleRemove}
+                own={user.username === blog.user.username} />)}
+        </div>
       }
     </div>
   )
