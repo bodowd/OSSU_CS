@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react'
 import Note from './components/Note'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
-import Togglable from "./components/Togglable";
+import Togglable from './components/Togglable'
 // we don't define `noteService` explicity. we just name what is exported from notes service as noteService
 import noteService from './services/notes'
 import loginService from './services/login'
@@ -36,7 +36,7 @@ const App = () => {
     }
   }, [])
 
-  console.log('render', notes.length, 'notes');
+  console.log('render', notes.length, 'notes')
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
 
@@ -91,27 +91,27 @@ const App = () => {
   }
 
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.removeItem('loggedNoteappUser')
     // refresh the page
     window.location.reload(false)
   }
 
   const loginForm = () => (
-      <Togglable buttonLabel="log in">
-        {/* child components are the react elements that we define between the opening and closing tags of a component */}
-          <LoginForm
-            doLogin={handleLogin}
-          />
-      </Togglable>
+    <Togglable buttonLabel="log in">
+      {/* child components are the react elements that we define between the opening and closing tags of a component */}
+      <LoginForm
+        doLogin={handleLogin}
+      />
+    </Togglable>
   )
-  
-  // the useRef hook is used to create a noteFormRef ref which acts as a reference to the component. This hook ensures 
+
+  // the useRef hook is used to create a noteFormRef ref which acts as a reference to the component. This hook ensures
   // the same reference is kept throughout re-renders of the component
   const noteFormRef = useRef()
   const noteForm = () => (
     <Togglable buttonLabel="new note" ref={noteFormRef}>
-      <NoteForm 
+      <NoteForm
         createNote={addNote}
       />
     </Togglable>
@@ -128,7 +128,7 @@ const App = () => {
       {user !== null && noteForm()} */}
       {/* the other way to make it more straightforward is this */}
       {user === null ?
-       loginForm() : 
+        loginForm() :
         <div>
           <p>{user.name} logged-in</p>
           {noteForm()}
@@ -148,7 +148,7 @@ const App = () => {
           <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />)}
       </ul>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
