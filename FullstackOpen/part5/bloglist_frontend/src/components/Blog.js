@@ -28,27 +28,32 @@ const Blog = ({ blog, user, handleLike, handleRemove, own }) => {
         {/* don't show the view button if we are viewing the blog. instead show the cancel button */}
         <button onClick={toggleVis} style={hideWhenVisible}>view</button>
       </div>
-      <div style={showWhenVisible}>
-        <div>
-          {blog.url}
-        </div>
-        <div>
+
+      {/* visible flag to not render the componenet until it's true */}
+      {visible&&(
+        <div style={showWhenVisible}>
+          <div>
+            {blog.url}
+          </div>
+          <div>
                 likes: {blog.likes}
-          <button onClick={() => handleLike(blog.id, false)}>like</button>
-          <button onClick={() => handleLike(blog.id, true)}>dislike</button>
+            <button onClick={() => handleLike(blog.id, false)}>like</button>
+            <button onClick={() => handleLike(blog.id, true)}>dislike</button>
+          </div>
+          <div>
+            {user.name}
+          </div>
+          <div>
+            <button onClick={toggleVis}>cancel</button>
+          </div>
+          <div>
+            {own && <button onClick={() => handleRemove(blog.id)}>remove</button>}
+          </div>
         </div>
-        <div>
-          {user.name}
-        </div>
-        <div>
-          <button onClick={toggleVis}>cancel</button>
-        </div>
-        <div>
-          {own && <button onClick={() => handleRemove(blog.id)}>remove</button>}
-        </div>
-      </div>
+      )}
     </div>
   )}
+
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
