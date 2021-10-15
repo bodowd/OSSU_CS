@@ -12,7 +12,7 @@ const Togglable = React.forwardRef((props, ref) => {
     setVisible(!visible)
   }
 
-  // useImperativeHandle makes the toggleVisibility function available outside of the component which we will use 
+  // useImperativeHandle makes the toggleVisibility function available outside of the component which we will use
   // by calling noteFormRef.current.toggleVisibility() after a new note has been created in App()
   useImperativeHandle(ref, () => {
     return {

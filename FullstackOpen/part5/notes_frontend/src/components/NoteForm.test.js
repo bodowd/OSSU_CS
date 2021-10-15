@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
@@ -24,6 +25,7 @@ test('<NoteForm /> updates parent state and calls onSubmit', () => {
 
   // check that createNote is called once
   expect(createNote.mock.calls).toHaveLength(1)
+  
   // check content of the createNote call
   expect(createNote.mock.calls[0][0].content).toBe('testing of forms could be easier')
 })
