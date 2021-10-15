@@ -12,8 +12,8 @@ const blog = {
   user: user
 }
 
-const handleLike = () => {}
-const handleRemove = () => {}
+let handleLike = () => {}
+let handleRemove = () => {}
 
 describe('Blog', () => {
   test('<Blog /> renders the blog title and author but does not render its url or number of likes by default', () =>{
@@ -33,12 +33,33 @@ describe('Blog', () => {
       <Blog blog={blog} user={user} handleLike={handleLike} handleRemove={handleRemove} own={true} />
     )
 
-    const button = component.container.querySelector('button')
+    // don't use query selector because there's several buttons on the component. Look for the text of the button
+    const button = component.getByText('view')
     fireEvent.click(button)
 
     // console.log(component.container.textContent)
     expect(component.container).toHaveTextContent(`${blog.url}`)
     expect(component.container).toHaveTextContent(`${blog.likes}`)
+  })
+
+  test('when like button is clicked twice, the event handler componenet received as props is called twice', () => {
+    // assign the mockHandler to the handLike variable which goes to the component below
+    const mockHandler = jest.fn()
+    handleLike = mockHandler
+
+    const component = render(
+      <Blog blog={blog} user={user} handleLike={handleLike} handleRemove={handleRemove} own={true} />
+    )
+
+    const button = component.getByText('view')
+    fireEvent.click(button)
+
+    const likeButton = component.getByText('like')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+    // console.log(mockHandler.mock.calls)
+    expect(mockHandler.mock.calls).toHaveLength(2)
+
   })
 
 })
