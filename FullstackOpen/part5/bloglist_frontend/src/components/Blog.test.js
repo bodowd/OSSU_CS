@@ -23,10 +23,22 @@ describe('Blog', () => {
     )
     expect(component.container).toHaveTextContent(`${blog.title}`)
     expect(component.container).toHaveTextContent(`${blog.author}`)
-    console.log(component.container.textContent)
+    // console.log(component.container.textContent)
     expect(component.container).not.toHaveTextContent(`${blog.url}`)
     expect(component.container).not.toHaveTextContent(`${blog.likes}`)
   })
 
+  test('<Blog /> renders url and likes when the button controlling the shown details has been clicked', () => {
+    const component = render(
+      <Blog blog={blog} user={user} handleLike={handleLike} handleRemove={handleRemove} own={true} />
+    )
+
+    const button = component.container.querySelector('button')
+    fireEvent.click(button)
+
+    // console.log(component.container.textContent)
+    expect(component.container).toHaveTextContent(`${blog.url}`)
+    expect(component.container).toHaveTextContent(`${blog.likes}`)
+  })
 
 })
