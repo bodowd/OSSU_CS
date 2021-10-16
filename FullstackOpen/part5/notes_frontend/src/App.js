@@ -110,7 +110,7 @@ const App = () => {
   // the same reference is kept throughout re-renders of the component
   const noteFormRef = useRef()
   const noteForm = () => (
-    <Togglable buttonLabel="new note" ref={noteFormRef}>
+    <Togglable className="makeNewNoteButton" buttonLabel="make new note" ref={noteFormRef}>
       <NoteForm
         createNote={addNote}
       />
