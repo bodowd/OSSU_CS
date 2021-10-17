@@ -35,10 +35,10 @@ const Blog = ({ blog, user, handleLike, handleRemove, own }) => {
           <div>
             {blog.url}
           </div>
-          <div>
+          <div className="likes">
                 likes: {blog.likes}
-            <button onClick={() => handleLike(blog.id, false)}>like</button>
-            <button onClick={() => handleLike(blog.id, true)}>dislike</button>
+            <button id="likeButton" onClick={() => handleLike(blog.id, false)}>like</button>
+            <button id="dislikeButton" onClick={() => handleLike(blog.id, true)}>dislike</button>
           </div>
           <div>
             {user.name}
@@ -47,7 +47,7 @@ const Blog = ({ blog, user, handleLike, handleRemove, own }) => {
             <button onClick={toggleVis}>cancel</button>
           </div>
           <div>
-            {own && <button onClick={() => handleRemove(blog.id)}>remove</button>}
+            {own && <button id="removeButton" onClick={() => handleRemove(blog.id)}>remove</button>}
           </div>
         </div>
       )}
