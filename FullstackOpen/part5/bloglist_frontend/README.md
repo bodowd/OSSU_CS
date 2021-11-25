@@ -1,4 +1,4 @@
-![alt text](https://github.com/bodowd/OSSU_CS/tree/master/FullstackOpen/part5/bloglist_frontend/blob/master/screenshot.png?raw=true)
+![alt text](https://github.com/bodowd/OSSU_CS/blob/master/FullstackOpen/part5/bloglist_frontend/screenshot.png?raw=true)
 
 # Getting Started with Create React App
 
