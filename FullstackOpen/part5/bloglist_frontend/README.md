@@ -1,3 +1,5 @@
+![alt text](https://github.com/bodowd/OSSU_CS/tree/master/FullstackOpen/part5/bloglist_frontend/blob/master/screenshot.png?raw=true)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
