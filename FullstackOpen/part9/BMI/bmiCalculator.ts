@@ -1,8 +1,27 @@
+interface Values {
+  value1: number;
+  value2: number;
+}
+
+const parseArguments = (args: Array<string>): Values => {
+  if (args.length < 4) throw new Error("Not enough arguments.");
+  if (args.length > 4) throw new Error("Too many arguments");
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      value1: Number(args[2]),
+      value2: Number(args[3]),
+    };
+  } else {
+    throw new Error("Provided numbers were not numbers!");
+  }
+};
+
 const calculateBmi = (height: number, mass: number) => {
   if (height === 0) throw new Error("can't divide by zero");
-  const heightInMeters = height / 100
-  const bmi = mass / (heightInMeters)**2;
-  console.log(bmi)
+  const heightInMeters = height / 100;
+  const bmi = mass / heightInMeters ** 2;
+  console.log(bmi);
 
   if (bmi < 16) {
     return "Underweight (Severe thinness) ";
@@ -23,4 +42,15 @@ const calculateBmi = (height: number, mass: number) => {
   }
 };
 
-console.log(calculateBmi(180, 74));
+try {
+  const { value1, value2 } = parseArguments(process.argv);
+  const height = value1;
+  const mass = value2;
+  console.log(calculateBmi(height, mass));
+} catch (error: unknown) {
+  let errorMessage = "Something wrong occurred.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
