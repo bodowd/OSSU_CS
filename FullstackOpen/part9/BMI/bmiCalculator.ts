@@ -21,7 +21,6 @@ const calculateBmi = (height: number, mass: number) => {
   if (height === 0) throw new Error("can't divide by zero");
   const heightInMeters = height / 100;
   const bmi = mass / heightInMeters ** 2;
-  console.log(bmi);
 
   if (bmi < 16) {
     return "Underweight (Severe thinness) ";
@@ -39,6 +38,8 @@ const calculateBmi = (height: number, mass: number) => {
     return "Obese (Class II)";
   } else if (bmi >= 40) {
     return "Obese (Class III)";
+  } else {
+    return "Something wrong";
   }
 };
 
@@ -54,3 +55,5 @@ try {
   }
   console.log(errorMessage);
 }
+
+export { calculateBmi };
