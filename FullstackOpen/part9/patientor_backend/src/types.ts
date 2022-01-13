@@ -9,6 +9,8 @@ export interface PatientEntry {
     occupation: string;
 }
 
+export type publicPatient = Omit<PatientEntry, "ssn">;
+
 export interface Diagnosis {
     code: string;
     name: string;
