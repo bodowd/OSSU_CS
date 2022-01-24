@@ -6,7 +6,7 @@ interface ContentProps {
 export default function Content(props: ContentProps) {
   return (
     <div>
-      <p>{props.name} {props.exerciseCount}</p>
+      <p><b>{props.name} {props.exerciseCount}</b></p>
     </div>
   );
 }
