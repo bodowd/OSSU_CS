@@ -26,15 +26,9 @@ export default function Part(props: PartsProps) {
       );
       break;
     case "groupProject":
-      component = (
-        <Content name={props.name} exerciseCount={props.exerciseCount} />
-      );
       description = <div>project exercises {props.groupProjectCount}</div>;
       break;
     case "submission":
-      component = (
-        <Content name={props.name} exerciseCount={props.exerciseCount} />
-      );
       description = <div>submit to {props.exerciseSubmissionLink}</div>;
       break;
     case "special":
