@@ -10,14 +10,18 @@ export interface PatientEntry {
     ssn: string;
     gender: Gender;
     occupation: string;
+    entries: Entry[];
 }
 
 export type NewPatient = Omit<PatientEntry, "id">
 
-export type publicPatient = Omit<PatientEntry, "ssn">;
+export type publicPatient = Omit<PatientEntry, "ssn" | "entries">;
 
 export interface Diagnosis {
     code: string;
     name: string;
     latin?: string;
+}
+
+export interface Entry {
 }

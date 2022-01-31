@@ -22,4 +22,13 @@ patientRouter.post("/", (req, res) => {
     }
 })
 
+patientRouter.get("/:id", (req, res) => {
+    const patient = patientService.getPatientDetail(req.params.id);
+    if (patient) {
+        res.status(200).json(patient);
+    } else {
+        res.status(404)
+    }
+})
+
 export default patientRouter;

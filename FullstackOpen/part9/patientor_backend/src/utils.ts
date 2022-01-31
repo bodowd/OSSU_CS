@@ -1,4 +1,4 @@
-import { NewPatient, Gender } from "./types";
+import { NewPatient, Gender, Entry } from "./types";
 
 type Fields = {
   name: unknown;
@@ -6,15 +6,17 @@ type Fields = {
   ssn: unknown;
   gender: unknown;
   occupation: unknown;
+  entries: unknown;
 };
 
-const toNewPatientEntry = ( {name, dateOfBirth, ssn, gender, occupation}: Fields): NewPatient => {
+const toNewPatientEntry = ( {name, dateOfBirth, ssn, gender, occupation, entries}: Fields): NewPatient => {
     const newEntry: NewPatient = {
         name: parseName(name),
         dateOfBirth: parseDOB(dateOfBirth),
         ssn: parseSSN(ssn),
         gender: parseGender(gender),
-        occupation: parseOccupation(occupation)
+        occupation: parseOccupation(occupation),
+        entries: parseEntries(entries)
     }
     return newEntry
 }
@@ -64,6 +66,13 @@ const parseOccupation = (occupation: unknown): string => {
         throw new Error("Incorrect or missing occupation")
     }
     return occupation
+}
+
+const parseEntries = (entries: any): Entry[] => {
+    if (!entries) {
+        throw new Error(`Incorrect or missing entires: ${entries}`)
+    }
+    return entries
 }
 
 export default toNewPatientEntry
