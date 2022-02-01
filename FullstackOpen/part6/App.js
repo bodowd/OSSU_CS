@@ -46,28 +46,39 @@ store.dispatch({
 
 const generateId = () => Math.floor(Math.random() * 10000000)
 
+// action creator. Creates actions
+const createNote = (content) => {
+  return {
+    type: 'NEW_NOTE',
+    data: {
+      content,
+      important: false,
+      id: generateId(),
+    },
+  }
+}
+
+// action creator
+const toggleImportanceOf = (id) => {
+  return {
+    type: 'TOGGLE_IMPORTANCE',
+    data: {id}
+  }
+}
+
 const App = () => {
   const addNote = (event) => {
     event.preventDefault()
     // we will name the input field in the html with note. That is how we can get event.target.note here
     const content = event.target.note.value
     event.target.note.value = ''
-    store.dispatch({
-      type: 'NEW_NOTE',
-      data: {
-        content,
-        important: false,
-        id: generateId(),
-      },
-    })
+    store.dispatch(createNote(content))
   }
 
   const toggleImportance = (id) => {
-    store.dispatch({
-      type: 'TOGGLE_IMPORTANCE',
-      data: { id },
-    })
+    store.dispatch(toggleImportanceOf(id))
   }
+
   return (
     <div>
       <form onSubmit={addNote}>
