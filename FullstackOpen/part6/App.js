@@ -1,82 +1,50 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
+import { createNote, toggleImportanceOf } from './reducers/noteReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
-const noteReducer = (state = [], action) => {
-  switch (action.type) {
-    case 'NEW_NOTE':
-      // return state.concat(action.data)
-      // or using the JS array spread syntax
-      return [...state, action.data]
-    case 'TOGGLE_IMPORTANCE': {
-      const id = action.data.id
-      const noteToChange = state.find((n) => n.id === id)
-      const changedNote = {
-        ...noteToChange,
-        important: !noteToChange.important,
-      }
-      // a new state is returned. Created by taking all of the notes from the old state, except for the desired note, which we replace
-      // with its slightly altered copy
-      return state.map((note) => (note.id !== id ? note : changedNote))
-    }
-    default:
-      return state
-  }
-}
 
-const store = createStore(noteReducer)
+// store.dispatch({
+//   type: 'NEW_NOTE',
+//   data: {
+//     content: 'the app state is in redux store',
+//     important: true,
+//     id: 1,
+//   },
+// })
 
-store.dispatch({
-  type: 'NEW_NOTE',
-  data: {
-    content: 'the app state is in redux store',
-    important: true,
-    id: 1,
-  },
-})
+// store.dispatch({
+//   type: 'NEW_NOTE',
+//   data: {
+//     content: 'state changes are made with actions',
+//     important: false,
+//     id: 2,
+//   },
+// })
 
-store.dispatch({
-  type: 'NEW_NOTE',
-  data: {
-    content: 'state changes are made with actions',
-    important: false,
-    id: 2,
-  },
-})
 
-const generateId = () => Math.floor(Math.random() * 10000000)
-
-// action creator. Creates actions
-const createNote = (content) => {
-  return {
-    type: 'NEW_NOTE',
-    data: {
-      content,
-      important: false,
-      id: generateId(),
-    },
-  }
-}
-
-// action creator
-const toggleImportanceOf = (id) => {
-  return {
-    type: 'TOGGLE_IMPORTANCE',
-    data: {id}
-  }
-}
 
 const App = () => {
+  // useDispatch hook dispatches the actions to the store
+  // provides any React component access to the dispatch function of the redux store defined in index.js
+  // allows all components to make changes to the state of the redux store
+  const dispatch = useDispatch()
+
+  // access the data stored in the store with useSelector hook, which is an array
+  // we need all of the notes so the selector function returns the whole state
+  // could return selected parts of the contents of the redux store for example:
+  // useSelector(state => state.filter(note => note.important))
+  const notes = useSelector(state => state)
+
   const addNote = (event) => {
     event.preventDefault()
     // we will name the input field in the html with note. That is how we can get event.target.note here
     const content = event.target.note.value
     event.target.note.value = ''
-    store.dispatch(createNote(content))
+    dispatch(createNote(content))
   }
 
   const toggleImportance = (id) => {
-    store.dispatch(toggleImportanceOf(id))
+    dispatch(toggleImportanceOf(id))
   }
 
   return (
@@ -86,7 +54,7 @@ const App = () => {
         <button type="submit">add</button>
       </form>
       <ul>
-        {store.getState().map((note) => (
+        {notes.map((note) => (
           // change the notes importance by clicking on its name
           <li key={note.id} onClick={() => toggleImportance(note.id)}>
             {note.content} <strong>{note.important ? 'important' : ''}</strong>
