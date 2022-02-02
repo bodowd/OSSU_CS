@@ -1,6 +1,9 @@
 import React from 'react'
 import { createNote, toggleImportanceOf } from './reducers/noteReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import Note from './src/components/Notes'
+import NewNote from './src/components/NewNote'
+import VisibilityFilter from './src/components/VisibilityFilter'
 
 
 // store.dispatch({
@@ -24,43 +27,18 @@ import { useSelector, useDispatch } from 'react-redux'
 
 
 const App = () => {
-  // useDispatch hook dispatches the actions to the store
-  // provides any React component access to the dispatch function of the redux store defined in index.js
-  // allows all components to make changes to the state of the redux store
-  const dispatch = useDispatch()
 
-  // access the data stored in the store with useSelector hook, which is an array
-  // we need all of the notes so the selector function returns the whole state
-  // could return selected parts of the contents of the redux store for example:
-  // useSelector(state => state.filter(note => note.important))
-  const notes = useSelector(state => state)
-
-  const addNote = (event) => {
-    event.preventDefault()
-    // we will name the input field in the html with note. That is how we can get event.target.note here
-    const content = event.target.note.value
-    event.target.note.value = ''
-    dispatch(createNote(content))
+  // we will store the value of the filter in the redux store in addition to the notes themselves
+  const filterSelected = (value) => {
+    console.log(value)
   }
 
-  const toggleImportance = (id) => {
-    dispatch(toggleImportanceOf(id))
-  }
 
   return (
     <div>
-      <form onSubmit={addNote}>
-        <input name="note" />
-        <button type="submit">add</button>
-      </form>
-      <ul>
-        {notes.map((note) => (
-          // change the notes importance by clicking on its name
-          <li key={note.id} onClick={() => toggleImportance(note.id)}>
-            {note.content} <strong>{note.important ? 'important' : ''}</strong>
-          </li>
-        ))}
-      </ul>
+      <NewNote />
+      <VisibilityFilter />
+      <Note />
     </div>
   )
 }

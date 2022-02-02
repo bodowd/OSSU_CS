@@ -1,3 +1,18 @@
+const initialState = [
+  {
+    content: 'reducer defines how redux store works',
+    important: true,
+    id: 1,
+  },
+  {
+    content: 'state',
+    important: false,
+    id: 2,
+  },
+]
+
+// reducer defines the impact of the action to the state of the app
+// customary to use switch in the reducer
 const noteReducer = (state = [], action) => {
   switch (action.type) {
     case 'NEW_NOTE':
@@ -35,10 +50,10 @@ export const createNote = (content) => {
 }
 
 // action creator
-const toggleImportanceOf = (id) => {
+export const toggleImportanceOf = (id) => {
   return {
     type: 'TOGGLE_IMPORTANCE',
-    data: {id}
+    data: { id },
   }
 }
 
