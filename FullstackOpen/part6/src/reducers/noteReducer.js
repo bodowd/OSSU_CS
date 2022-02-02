@@ -19,6 +19,8 @@ const noteReducer = (state = [], action) => {
       // return state.concat(action.data)
       // or using the JS array spread syntax
       return [...state, action.data]
+    case 'INIT_NOTES':
+      return action.data
     case 'TOGGLE_IMPORTANCE': {
       const id = action.data.id
       const noteToChange = state.find((n) => n.id === id)
@@ -38,14 +40,17 @@ const noteReducer = (state = [], action) => {
 const generateId = () => Math.floor(Math.random() * 10000000)
 
 // action creator. Creates actions
-export const createNote = (content) => {
+export const createNote = (data) => {
   return {
     type: 'NEW_NOTE',
-    data: {
-      content,
-      important: false,
-      id: generateId(),
-    },
+    data,
+  }
+}
+
+export const initializeNotes = (notes) => {
+  return {
+    type: 'INIT_NOTES',
+    data: notes
   }
 }
 
