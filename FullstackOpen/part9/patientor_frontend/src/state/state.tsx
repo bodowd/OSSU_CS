@@ -34,4 +34,6 @@ export const StateProvider: React.FC<StateProviderProps> = ({
     </StateContext.Provider>
   );
 };
+
+// the components that need to access the state or dispatcher use this to access those things
 export const useStateValue = () => useContext(StateContext);
