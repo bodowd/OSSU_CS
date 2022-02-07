@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { setPatientDetails, useStateValue } from "../state";
-import { Patient } from "../types";
+import { Entry, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import axios from "axios";
 
@@ -50,14 +50,40 @@ export default function index() {
     iconName = "genderless";
   }
 
+  console.log(patient);
+
   return (
     <div>
       <h2>
         {patient?.name}
         <Icon name={iconName} /> Hi
       </h2>
-      <p>ssn: {patient?.ssn}</p>
-      <p>occupation: {patient?.occupation}</p>
+      <div>
+        <span>ssn: {patient?.ssn}</span>
+      </div>
+      <div>
+        <span>occupation: {patient?.occupation}</span>
+      </div>
+      <br></br>
+      <div>
+        <h3>Entries</h3>
+        <div>
+          {patient?.entries?.map((e: Entry) => {
+            return (
+              <div key={e.id}>
+                <div>
+                  {e.date} {e.description}
+                </div>
+                <div>
+                  {e.diagnosisCodes?.map((c) => {
+                    return <li key={c}>{c}</li>;
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
