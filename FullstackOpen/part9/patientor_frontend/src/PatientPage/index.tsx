@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function index() {
   const { id } = useParams<{ id: string }>();
-  const [{ patient }, dispatch] = useStateValue();
+  const [{ patient, diagnoses }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const fetchPatientDetails = async () => {
@@ -50,8 +50,6 @@ export default function index() {
     iconName = "genderless";
   }
 
-  console.log(patient);
-
   return (
     <div>
       <h2>
@@ -76,7 +74,15 @@ export default function index() {
                 </div>
                 <div>
                   {e.diagnosisCodes?.map((c) => {
-                    return <li key={c}>{c}</li>;
+                    const diagnosisInfo = diagnoses?.filter(
+                      (d) => d.code === c
+                    )[0].name;
+                    console.log(diagnosisInfo);
+                    return (
+                      <li key={c}>
+                        {c} {diagnosisInfo}
+                      </li>
+                    );
                   })}
                 </div>
               </div>
