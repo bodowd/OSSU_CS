@@ -5,10 +5,12 @@ import { setPatientDetails, useStateValue } from "../state";
 import { Entry, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import axios from "axios";
+// import Diagnoses from "./Diagnoses";
+import EntryDetails from "./EntryDetails";
 
 export default function index() {
   const { id } = useParams<{ id: string }>();
-  const [{ patient, diagnoses }, dispatch] = useStateValue();
+  const [{ patient }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const fetchPatientDetails = async () => {
@@ -66,27 +68,9 @@ export default function index() {
       <div>
         <h3>Entries</h3>
         <div>
-          {patient?.entries?.map((e: Entry) => {
-            return (
-              <div key={e.id}>
-                <div>
-                  {e.date} {e.description}
-                </div>
-                <div>
-                  {e.diagnosisCodes?.map((c) => {
-                    const diagnosisInfo = diagnoses?.filter(
-                      (d) => d.code === c
-                    )[0].name;
-                    console.log(diagnosisInfo);
-                    return (
-                      <li key={c}>
-                        {c} {diagnosisInfo}
-                      </li>
-                    );
-                  })}
-                </div>
-              </div>
-            );
+          {patient?.entries?.map((entry: Entry) => {
+            console.log(entry);
+            return <EntryDetails key={entry.id} entry={entry} />;
           })}
         </div>
       </div>
