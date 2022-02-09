@@ -37,5 +37,5 @@ const HealthCheck: React.FC<HealthCheckProps> = ({ entry }) => {
       </Segment>
   );
 };
-
+    
 export default HealthCheck;

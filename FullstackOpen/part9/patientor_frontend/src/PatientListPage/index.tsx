@@ -14,6 +14,7 @@ import { addPatient } from "../state";
 const PatientListPage = () => {
   const [{ patients }, dispatch] = useStateValue();
 
+  // some hooks just for this page
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 

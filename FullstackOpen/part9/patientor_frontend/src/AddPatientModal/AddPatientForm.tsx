@@ -24,6 +24,9 @@ const genderOptions: GenderOption[] = [
 
 export const AddPatientForm = ({ onSubmit, onCancel } : Props ) => {
   return (
+    // Formik component is a wrapper requiring two props, initialValues and onSubmit
+    // the onSubmit callback has been passed down all the way from our patient list page. Sends POST request to backend
+    // and then it closes the modal
     <Formik
       initialValues={{
         name: "",
@@ -51,6 +54,7 @@ export const AddPatientForm = ({ onSubmit, onCancel } : Props ) => {
         return errors;
       }}
     >
+      {/* this is a child of the Formik wrapper */}
       {({ isValid, dirty }) => {
         return (
           <Form className="form ui">
@@ -83,6 +87,7 @@ export const AddPatientForm = ({ onSubmit, onCancel } : Props ) => {
               name="gender"
               options={genderOptions}
             />
+            {/* SemanticUI Grid to set them next to each other easily*/}
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
@@ -90,6 +95,7 @@ export const AddPatientForm = ({ onSubmit, onCancel } : Props ) => {
                 </Button>
               </Grid.Column>
               <Grid.Column floated="right" width={5}>
+                {/* The submit button is enabled only if the form is valid and dirty */}
                 <Button
                   type="submit"
                   floated="right"
